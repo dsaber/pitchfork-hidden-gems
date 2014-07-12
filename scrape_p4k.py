@@ -8,6 +8,7 @@ import bs4
 
 # storing and interacting with data
 import pandas as pd
+import cPickle
 
 
 def scrape_pitchfork(url_root='http://pitchfork.com/reviews/albums/', num_pages=780):
@@ -39,6 +40,7 @@ def scrape_pitchfork(url_root='http://pitchfork.com/reviews/albums/', num_pages=
 
 
 	for page in range(1, num_pages + 1):
+		print 'Working on page ' + str(page) + ' out of ' + str(num_pages)
 
 		url = url_root + str(page)
 		r = requests.get(url)
@@ -79,7 +81,10 @@ def scrape_pitchfork(url_root='http://pitchfork.com/reviews/albums/', num_pages=
 
 
 			# Artwork, Score, and 'Best New Music'
-			result['Artwork'].append(rev_content.img['src'])
+			try: 
+				result['Artwork'].append(rev_content.img['src'])
+			except:
+				result['Artwork'].append('')
 			result['Score'].append(float(rev_content.select('.score')[0].text.encode('ascii', 'ignore')))
 			bnm = 1 if 'Best New Music' in rev_content.text else 0 
 			result['BNM'].append(bnm)
@@ -92,3 +97,16 @@ def scrape_pitchfork(url_root='http://pitchfork.com/reviews/albums/', num_pages=
 	return result
 
 		
+
+if __name__ == '__main__':
+
+	result = scrape_pitchfork()
+
+	# pickle result 
+	cPickle.dump(result, open('data/raw_data_dump.pkl', 'w'))
+
+	# convert to DataFrame and store as json and as csv
+	df = pd.DataFrame(result)
+	df.to_csv('data/p4k_data.csv')
+	df.to_json('data/p4k_data.json')
+
