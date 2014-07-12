@@ -21,6 +21,7 @@ def scrape_meta(url_root='http://pitchfork.com/reviews/albums/', num_pages=780):
 			   'Album':  		[],
 			   'Reviewer': 		[],
 			   'Date':			[], 
+			   'Link':			[],
 			   'Artwork':		[]
 			 }
 
@@ -41,10 +42,11 @@ def scrape_meta(url_root='http://pitchfork.com/reviews/albums/', num_pages=780):
 
 		# using said primary container to get the fields we need
 		rev_info = obgrid.select('.info')
-		rev_links = 
+		rev_links = obgrid.findAll('a')
 		art_info = obgrid.select('.artwork')
 
-		for album, art in zip(rev_info, art_info):
+		for album, link, art in zip(rev_info, rev_links, art_info):
+
 
 			# the Artist/Album/Reviewer/Date fields should be self-explanatory
 			result['Artist'].append(album.h1.text.encode('ascii', 'ignore'))
@@ -52,12 +54,16 @@ def scrape_meta(url_root='http://pitchfork.com/reviews/albums/', num_pages=780):
 			result['Reviewer'].append(album.h3.text.encode('ascii', 'ignore')[3:]) # [3:] in order to get rid of "by"
 			result['Date'].append(album.h4.text.encode('ascii', 'ignore'))
 
+
+			# Links to actual review content
+			result['Link'].append(link['href'])
+
+
 			# the Album Art field is a bit trickier because of Pitchfork's peculiar HTML;
 			# I'm simply flagging it so you (as well as Future-Me) will know to be wary
 			temp_art = bs4.BeautifulSoup(art.select('.lazy')[0]['data-content'])
 			result['Artwork'].append(temp_art.img['src'])
 
 	return result
-
 
 		
