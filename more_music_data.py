@@ -1,0 +1,39 @@
+# to interact with Gracenote API
+import pygn_module.pygn as pygn 
+from _variables import * 
+
+# use this function to interact with Gracenote's API to bring 
+# in genre data
+def get_genre_data(c_id, u_id, artist_name, album_name):
+	metadata = pygn.search(clientID=c_id, userID=u_id, artist=artist_name, album=album_name)
+	genre_data = metadata['genre']
+
+	genre_id = []
+	genre_name = [] 
+	for key, val in genre_data.iteritems(): 
+		genre_id.append(genre_data[key]['ID'])
+		genre_name.append(genre_data[key]['TEXT'])
+
+	return ','.join(genre_id), ','.join(genre_name)
+
+
+if __name__ == '__main__':
+
+	# register with Gracenote API: You would need to provide your own Client ID
+	USER_ID = pygn.register(CLIENT_ID)
+
+	# read in data
+	df = pd.read_csv('data/p4k_data.csv')
+	df['GenreID'] = ''
+	df['Genre'] = ''
+
+	# use 'for' loop to avoid slamming Gracenote with 10's of 1000's of requests
+	# concurrently
+	for i in range(df.shape[0]):
+		album_genre_id, album_genre_name = get_genre_data(CLIENT, USER, df['Artist'][i], df['Album'][i])
+		df['GenreID'][i] = album_genre_id
+		df['Genre'][i] = album_genre_name
+
+	df.to_csv('data/p4k_complete_data.csv')
+	
+
