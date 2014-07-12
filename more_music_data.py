@@ -29,11 +29,12 @@ if __name__ == '__main__':
 
 	# use 'for' loop to avoid slamming Gracenote with 10's of 1000's of requests
 	# concurrently
-	for i in range(df.shape[0]):
+	for i in xrange(df.shape[0]):
 		album_genre_id, album_genre_name = get_genre_data(CLIENT, USER, df['Artist'][i], df['Album'][i])
 		df['GenreID'][i] = album_genre_id
 		df['Genre'][i] = album_genre_name
 
 	df.to_csv('data/p4k_complete_data.csv')
-	
+	df.to_json('data/p4k_complete_data.json')
+
 

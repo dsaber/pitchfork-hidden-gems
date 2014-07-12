@@ -11,7 +11,7 @@ import pandas as pd
 import cPickle
 
 
-def scrape_pitchfork(url_root='http://pitchfork.com/reviews/albums/', num_pages=780):
+def scrape_pitchfork(url_root='http://pitchfork.com/reviews/albums/', begin_page=1, end_page=780):
 
 	'''This function scrapes all-review data from Pitchfork.com; fields
 	include the following:
@@ -39,7 +39,7 @@ def scrape_pitchfork(url_root='http://pitchfork.com/reviews/albums/', num_pages=
 			 }
 
 
-	for page in range(1, num_pages + 1):
+	for page in xrange(begin_page, end_page + 1):
 		print 'Working on page ' + str(page) + ' out of ' + str(num_pages)
 
 		url = url_root + str(page)
