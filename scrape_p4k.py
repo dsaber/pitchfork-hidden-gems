@@ -1,3 +1,7 @@
+# suppress .pyc
+import sys 
+sys.dont_write_bytecode = True 
+
 # python libraries useful for scraping
 import requests
 import bs4 
@@ -6,14 +10,19 @@ import bs4
 import pandas as pd
 
 
-def scrape_meta(url_root='http://pitchfork.com/reviews/albums/', num_pages=780):
+def scrape_pitchfork(url_root='http://pitchfork.com/reviews/albums/', num_pages=780):
 
-	'''This function scrapes all-review related meta data 
-	on Pitchfork.com. This meta data includes the following fields:
+	'''This function scrapes all-review data from Pitchfork.com; fields
+	include the following:
 		- Artist
 		- Album
 		- Reviewer
+		- Date 
+		- Link to Review Content
 		- Album Art URL
+		- Review Content 
+		- Score 
+		- 'Best New Music' Designation
 	'''
 
 
@@ -22,20 +31,19 @@ def scrape_meta(url_root='http://pitchfork.com/reviews/albums/', num_pages=780):
 			   'Reviewer': 		[],
 			   'Date':			[], 
 			   'Link':			[],
-			   'Artwork':		[]
+			   'Artwork':		[],
+			   'Content':		[],
+			   'Score':			[],
+			   'BNM':			[] 
 			 }
 
 
-	for page in range(num_pages):
+	for page in range(1, num_pages + 1):
 
-		if page == 0:
-			str_page = ""
-		else:
-			str_page = str(page) 
-
-		url = url_root + str_page
+		url = url_root + str(page)
 		r = requests.get(url)
 		bs = bs4.BeautifulSoup(r.text) 
+
 
 		# primary container of Pitchfork reviews
 		obgrid = bs.select('.object-grid')[0]
@@ -43,9 +51,8 @@ def scrape_meta(url_root='http://pitchfork.com/reviews/albums/', num_pages=780):
 		# using said primary container to get the fields we need
 		rev_info = obgrid.select('.info')
 		rev_links = obgrid.findAll('a')
-		art_info = obgrid.select('.artwork')
 
-		for album, link, art in zip(rev_info, rev_links, art_info):
+		for album, link in zip(rev_info, rev_links):
 
 
 			# the Artist/Album/Reviewer/Date fields should be self-explanatory
@@ -56,13 +63,31 @@ def scrape_meta(url_root='http://pitchfork.com/reviews/albums/', num_pages=780):
 
 
 			# Links to actual review content
-			result['Link'].append(link['href'])
+			linkage = link['href']
+			result['Link'].append(linkage)
 
 
-			# the Album Art field is a bit trickier because of Pitchfork's peculiar HTML;
-			# I'm simply flagging it so you (as well as Future-Me) will know to be wary
-			temp_art = bs4.BeautifulSoup(art.select('.lazy')[0]['data-content'])
-			result['Artwork'].append(temp_art.img['src'])
+			# get actual review content, along with score and whether or not the 
+			# album received the 'Best New Music' designation
+			r_link = 'http://pitchfork.com' + linkage
+			request_content = requests.get(r_link)
+			rev_bs = bs4.BeautifulSoup(request_content.text)
+
+
+			# main content
+			rev_content = rev_bs.select('#main')[0]
+
+
+			# Artwork, Score, and 'Best New Music'
+			result['Artwork'].append(rev_content.img['src'])
+			result['Score'].append(float(rev_content.select('.score')[0].text.encode('ascii', 'ignore')))
+			bnm = 1 if 'Best New Music' in rev_content.text else 0 
+			result['BNM'].append(bnm)
+
+
+			# Review Content
+			result['Content'].append(rev_content.select('.editorial')[0].text.encode('ascii', 'ignore'))
+
 
 	return result
 
