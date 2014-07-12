@@ -40,7 +40,7 @@ def scrape_pitchfork(url_root='http://pitchfork.com/reviews/albums/', begin_page
 
 
 	for page in xrange(begin_page, end_page + 1):
-		print 'Working on page ' + str(page) + ' out of ' + str(num_pages)
+		print 'Working on page ' + str(page) + ' out of ' + str(end_page)
 
 		url = url_root + str(page)
 		r = requests.get(url)
@@ -81,11 +81,15 @@ def scrape_pitchfork(url_root='http://pitchfork.com/reviews/albums/', begin_page
 
 
 			# Artwork, Score, and 'Best New Music'
+			# (need the try/excepts for a couple of instances of mal-formed data)
 			try: 
 				result['Artwork'].append(rev_content.img['src'])
 			except:
 				result['Artwork'].append('')
-			result['Score'].append(float(rev_content.select('.score')[0].text.encode('ascii', 'ignore')))
+			try: 
+				result['Score'].append(float(rev_content.select('.score')[0].text.encode('ascii', 'ignore')))
+			except:
+				result['Score'].append(0.0)
 			bnm = 1 if 'Best New Music' in rev_content.text else 0 
 			result['BNM'].append(bnm)
 
