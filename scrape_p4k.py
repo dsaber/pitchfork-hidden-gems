@@ -45,6 +45,7 @@ def scrape_pitchfork(url_root='http://pitchfork.com/reviews/albums/', begin_page
 		url = url_root + str(page)
 		r = requests.get(url)
 		bs = bs4.BeautifulSoup(r.text) 
+		num_problems = 0
 
 
 		# primary container of Pitchfork reviews
@@ -55,49 +56,57 @@ def scrape_pitchfork(url_root='http://pitchfork.com/reviews/albums/', begin_page
 		rev_links = obgrid.findAll('a')
 
 		for album, link in zip(rev_info, rev_links):
-
-
-			# the Artist/Album/Reviewer/Date fields should be self-explanatory
-			result['Artist'].append(album.h1.text.encode('ascii', 'ignore'))
-			result['Album'].append(album.h2.text.encode('ascii', 'ignore'))
-			result['Reviewer'].append(album.h3.text.encode('ascii', 'ignore')[3:]) # [3:] in order to get rid of "by"
-			result['Date'].append(album.h4.text.encode('ascii', 'ignore'))
-
-
-			# Links to actual review content
-			linkage = link['href']
-			result['Link'].append(linkage)
-
-
-			# get actual review content, along with score and whether or not the 
-			# album received the 'Best New Music' designation
-			r_link = 'http://pitchfork.com' + linkage
-			request_content = requests.get(r_link)
-			rev_bs = bs4.BeautifulSoup(request_content.text)
-
-
-			# main content
-			rev_content = rev_bs.select('#main')[0]
-
-
-			# Artwork, Score, and 'Best New Music'
-			# (need the try/excepts for a couple of instances of mal-formed data)
+			# this try/except probably isn't wonderful form; however, I intensely 
+			# validated the code in the "try" block
+			# the try/except is to avoid bad HTML that seems to crops up randomly
 			try: 
-				result['Artwork'].append(rev_content.img['src'])
+				# the Artist/Album/Reviewer/Date fields should be self-explanatory
+				result['Artist'].append(album.h1.text.encode('ascii', 'ignore'))
+				result['Album'].append(album.h2.text.encode('ascii', 'ignore'))
+				result['Reviewer'].append(album.h3.text.encode('ascii', 'ignore')[3:]) # [3:] in order to get rid of "by"
+				result['Date'].append(album.h4.text.encode('ascii', 'ignore'))
+
+
+				# Links to actual review content
+				linkage = link['href']
+				result['Link'].append(linkage)
+
+
+				# get actual review content, along with score and whether or not the 
+				# album received the 'Best New Music' designation
+				r_link = 'http://pitchfork.com' + linkage
+				request_content = requests.get(r_link)
+				rev_bs = bs4.BeautifulSoup(request_content.text)
+
+
+				# main content
+				rev_content = rev_bs.select('#main')[0]
+
+
+				# Artwork, Score, and 'Best New Music'
+				# (need the try/excepts for a couple of instances of mal-formed data)
+				try: 
+					result['Artwork'].append(rev_content.img['src'])
+				except:
+					result['Artwork'].append('')
+				try: 
+					result['Score'].append(float(rev_content.select('.score')[0].text.encode('ascii', 'ignore')))
+				except:
+					result['Score'].append(0.0)
+				try: 
+					bnm = 1 if 'Best New Music' in rev_content.text else 0 
+					result['BNM'].append(bnm)
+				except:
+					result['BNM'].append(0)
+
+
+				# Review Content
+				result['Content'].append(rev_content.select('.editorial')[0].text.encode('ascii', 'ignore'))
 			except:
-				result['Artwork'].append('')
-			try: 
-				result['Score'].append(float(rev_content.select('.score')[0].text.encode('ascii', 'ignore')))
-			except:
-				result['Score'].append(0.0)
-			bnm = 1 if 'Best New Music' in rev_content.text else 0 
-			result['BNM'].append(bnm)
+				print "Ran into problem"
+				num_problems += 1
 
-
-			# Review Content
-			result['Content'].append(rev_content.select('.editorial')[0].text.encode('ascii', 'ignore'))
-
-
+	print "Number of Problems: " + str(num_problems)
 	return result
 
 		
