@@ -26,14 +26,23 @@ if __name__ == '__main__':
 	df = pd.read_csv('data/p4k_data.csv')
 	df['GenreID'] = ''
 	df['Genre'] = ''
+	num_unavailable = 0
 
 	# use 'for' loop to avoid slamming Gracenote with 10's of 1000's of requests
 	# concurrently
 	for i in xrange(df.shape[0]):
-		album_genre_id, album_genre_name = get_genre_data(CLIENT, USER, df['Artist'][i], df['Album'][i])
-		df['GenreID'][i] = album_genre_id
-		df['Genre'][i] = album_genre_name
+		print i 
+		try: 
+			album_genre_id, album_genre_name = get_genre_data(CLIENT, USER, df['Artist'][i], df['Album'][i])
+			df['GenreID'][i] = album_genre_id
+			df['Genre'][i] = album_genre_name
+		except:
+			print 'Data unavailable'
+			num_unavailable += 1
+			df['GenreID'][i] = 'XXXX'
+			df['Genre'][i] = 'Other'
 
+	print 'Unable to find ' + str(num_unavailable)
 	df.to_csv('data/p4k_complete_data.csv')
 	df.to_json('data/p4k_complete_data.json')
 
