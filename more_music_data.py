@@ -2,6 +2,10 @@
 import pygn_module.pygn as pygn 
 from _variables import * 
 
+# standard
+import pandas as pd 
+
+
 # use this function to interact with Gracenote's API to bring 
 # in genre data
 def get_genre_data(c_id, u_id, artist_name, album_name):
@@ -33,7 +37,7 @@ if __name__ == '__main__':
 	for i in xrange(df.shape[0]):
 		print i 
 		try: 
-			album_genre_id, album_genre_name = get_genre_data(CLIENT, USER, df['Artist'][i], df['Album'][i])
+			album_genre_id, album_genre_name = get_genre_data(CLIENT_ID, USER_ID, df['Artist'][i], df['Album'][i])
 			df['GenreID'][i] = album_genre_id
 			df['Genre'][i] = album_genre_name
 		except:
