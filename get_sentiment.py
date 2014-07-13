@@ -1,5 +1,6 @@
 # interact with NLTK Sentiment Analysis API
 import requests
+from _variables import * 
 
 # standard 
 import pandas as pd
@@ -7,17 +8,14 @@ import pandas as pd
 
 # use this function to interact with an external API that produces probability of 
 # negative/positive sentiment
-def get_nltk_sentiment(review_content, api_url='http://text-processing.com/api/sentiment/'):
+def get_nltk_sentiment(review_content, api_url='https://japerk-text-processing.p.mashape.com/sentiment/', key=MASHAPE_KEY):
 
-	payload = { 'text': review_content.strip() }
-	r = requests.post(api_url, data=payload) 
+	text = { 'text': review_content.strip() }
+	headers = { 'X-Mashape-Key': key } 
+	r = requests.post(api_url, headers=headers, data=text) 
 
-	if r.status_code == 503:
-		print 'Upgrade to Premium'
-		return -1 
-	else: 
-		sentiment = r.json()
-		return sentiment['label'], sentiment['probability']['neg'], sentiment['probability']['neutral'], sentiment['probability']['pos']
+	sentiment = r.json()
+	return sentiment['label'], sentiment['probability']['neg'], sentiment['probability']['neutral'], sentiment['probability']['pos']
 
 
 if __name__ == '__main__':
@@ -29,7 +27,9 @@ if __name__ == '__main__':
 	df['NLTK_neg'] = 0.0
 
 	for i in xrange(df.shape[0]):
+		print i 
 		label, neg, neutral, pos = get_nltk_sentiment(df['Content'][i])
+		print str(df['Score'][i]) + ' Score against ' + str(10.0 * pos) + ' Sentiment'
 
 		df['NLTK_label'][i] = label 
 		df['NLTK_pos'][i] = pos
