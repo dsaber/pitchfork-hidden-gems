@@ -10,9 +10,18 @@ import numpy as np
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfVectorizer
 
+from nltk.tokenize import wordpunct_tokenize
+from nltk.stem import WordNetLemmatizer
+
 # for cross-validation
 from sklearn.cross_validation import train_test_split
 
+# to incorporate Lemmatization
+class LemmaTokenizer(object):
+	def __init__(self):
+		self.wnl = WordNetLemmatizer()
+	def __call__(self, doc):
+		return [self.wnl.lemmatize(t) for t in wordpunct_tokenize(doc)]
 
 
 def produce_sentiment_data(in_df, neg_thresh=6.0, pos_thresh=8.0, reviewer='All', genre='All'):
