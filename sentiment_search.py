@@ -21,6 +21,7 @@ from sklearn.naive_bayes import MultinomialNB
 from sklearn.linear_model import LogisticRegression
 
 # to test (this is a relatively complex data pipeline) 
+# (See: Combinatorial Explosion) 
 MODELS = { 
 			LogisticRegression: { 'penalty': 	['l1', 'l2'],
 								  'C':			[0.001, 0.01, 0.1, 1.0, 10.0] },
@@ -28,7 +29,7 @@ MODELS = {
 }
 PRODUCE_VOCAB = { 
 			cv_or_tfidf: 		[ 'CV', 'TF-IDF' ],
-			info_thresh: 		[ None, 2.0, 3.0, 4.0, 5.0 ] 
+			info_thresh: 		[ None, 1.5, 2.0, 3.0, 4.0, 5.0 ] 
 }
 NLP_PARAMS = { 
 			tokenizer: 			[ None, sa.LemmaTokenizer() ],
@@ -38,4 +39,5 @@ NLP_PARAMS = {
 }
 
 if __name__ == '__main__':
-	pass 
+	
+	df = pd.read_csv(filepath_or_buffer) 

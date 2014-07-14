@@ -75,7 +75,14 @@ def calculate_ratios(in_neg_df, in_pos_df, cv_or_tfidf='CV', nlp_params={}, info
 	if info_thresh is not None:
 		all_counts = all_counts[(all_counts['Neg_Pos'] >= info_thresh) | (all_counts['Pos_Neg'] >= info_thresh)]
 
-	return all_counts
+	# remake CV/TF-IDF with selected vocabulary
+	nlp_params['vocabulary'] = all_counts.index 
+	if cv_or_tfidf == 'CV':
+		cv_or_tf = CountVectorizer(**nlp_params) 
+	else:
+		cv_or_tf = TfidfVectorizer(**nlp_params)
+
+	return all_counts, cv_or_tf 
 
 
 
