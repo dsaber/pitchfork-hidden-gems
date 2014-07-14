@@ -35,7 +35,7 @@ def produce_sentiment_data(in_df, neg_thresh=6.0, pos_thresh=8.0, reviewer='All'
 	return df[~(neg | pos)], df[neg], df[pos] 
 
 
-def calculate_ratios(in_neg_df, in_pos_df, cv_params={}):
+def calculate_ratios(in_neg_df, in_pos_df, cv_params={}, info_thresh=None):
 
 	# get data ready
 	neg_df = in_neg_df.copy()
@@ -62,6 +62,10 @@ def calculate_ratios(in_neg_df, in_pos_df, cv_params={}):
 	# calculate ratios
 	all_counts['Neg_Pos'] = (1.0 * all_counts['Negative'])/all_counts['Positive']
 	all_counts['Pos_Neg'] = (1.0 * all_counts['Positive'])/all_counts['Negative']
+
+	if info_thresh is not None:
+		all_counts = all_counts[all_counts['Neg_Pos'] >= info_thresh]
+		all_counts = all_counts[all_counts['Pos_Neg'] >= info_thresh]
 
 	return all_counts
 
