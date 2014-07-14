@@ -1,4 +1,4 @@
-# This script is a workhorse, not a module...
+# This .py file isn't a module so much as it is a workhorse:
 # Its primary goal is to find the best version of the following data pipeline:
 	# (A) CV and TF-IDF (i.e., tuning minimum document frequency, ngram range, etc.)
 	# (B) "Importance Threshold" (i.e., to be included as a feature, a word or ngram

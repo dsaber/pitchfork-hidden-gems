@@ -35,7 +35,7 @@ def produce_sentiment_data(in_df, neg_thresh=6.0, pos_thresh=8.0, reviewer='All'
 	return df[~(neg | pos)], df[neg], df[pos] 
 
 
-def calculate_ratios(in_neg_df, in_pos_df, cv_params={}, info_thresh=None):
+def calculate_ratios(in_neg_df, in_pos_df, cv_or_tfidf='CV', nlp_params={}, info_thresh=None):
 
 	# get data ready
 	neg_df = in_neg_df.copy()
@@ -43,12 +43,15 @@ def calculate_ratios(in_neg_df, in_pos_df, cv_params={}, info_thresh=None):
 	all_content = pd.concat([pos_df, neg_df])
 
 	# fit CountVectorizer
-	cv = CountVectorizer(**cv_params)
-	cv.fit(all_content)
+	if cv_or_tfidf == 'CV':
+		cv_or_tf = CountVectorizer(**nlp_params)
+	else:
+		cv_or_tf = TfidfVectorizer(**nlp_params)
+	cv_or_tf.fit(all_content)
 
 	# transform positive and negative content
-	neg_cv = pd.DataFrame(cv.transform(neg_df).todense(), columns=cv.vocabulary_)
-	pos_cv = pd.DataFrame(cv.transform(pos_df).todense(), columns=cv.vocabulary_)
+	neg_cv = pd.DataFrame(cv_or_tf.transform(neg_df).todense(), columns=cv_or_tf.vocabulary_)
+	pos_cv = pd.DataFrame(cv_or_tf.transform(pos_df).todense(), columns=cv_or_tf.vocabulary_)
 
 	# count up words
 	neg_counts = np.sum(neg_cv, axis=0)
@@ -64,8 +67,7 @@ def calculate_ratios(in_neg_df, in_pos_df, cv_params={}, info_thresh=None):
 	all_counts['Pos_Neg'] = (1.0 * all_counts['Positive'])/all_counts['Negative']
 
 	if info_thresh is not None:
-		all_counts = all_counts[all_counts['Neg_Pos'] >= info_thresh]
-		all_counts = all_counts[all_counts['Pos_Neg'] >= info_thresh]
+		all_counts = all_counts[(all_counts['Neg_Pos'] >= info_thresh) | (all_counts['Pos_Neg'] >= info_thresh)]
 
 	return all_counts
 
