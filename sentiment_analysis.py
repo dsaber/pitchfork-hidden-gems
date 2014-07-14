@@ -13,9 +13,6 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from nltk.tokenize import wordpunct_tokenize
 from nltk.stem import WordNetLemmatizer
 
-# for cross-validation
-from sklearn.cross_validation import train_test_split
-
 # to incorporate Lemmatization
 class LemmaTokenizer(object):
 	def __init__(self):
@@ -79,9 +76,6 @@ def calculate_ratios(in_neg_df, in_pos_df, cv_or_tfidf='CV', nlp_params={}, info
 		all_counts = all_counts[(all_counts['Neg_Pos'] >= info_thresh) | (all_counts['Pos_Neg'] >= info_thresh)]
 
 	return all_counts
-
-
-
 
 
 
