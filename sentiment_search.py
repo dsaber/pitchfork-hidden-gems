@@ -6,6 +6,10 @@
 	#	   or vice versa. The "far more" is the threshold of interest.
 	# (C) Naive Bayes OR Logistic Regression (including tuning parameters)
 
+# suppress .pyc
+import sys 
+sys.dont_write_bytecode = True 
+
 # my sentiment analysis tools
 import sentiment_analysis as sa 
 
@@ -112,7 +116,7 @@ def main(scoring_func=metrics.roc_auc_score):
 						clf.fit(train_transformed, train_label)
 
 						this_score = scoring_func(test_label, clf.predict(test_transformed))
-						this_to_str = str(vocab_option) + str(nlp_option) + str(combos)
+						this_to_str = str(vocab_option) + str(nlp_option) + str(combo)
 						print this_to_str + ': ' + str(this_score)
 
 						if this_to_str not in result.keys():
