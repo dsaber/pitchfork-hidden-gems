@@ -58,7 +58,7 @@ def calculate_ratios(in_neg_df, in_pos_df, cv_or_tfidf='CV', nlp_params={}, info
 	# transform positive and negative content
 	neg_cv = pd.DataFrame(cv_or_tf.transform(neg_df).todense(), columns=cv_or_tf.vocabulary_)
 	pos_cv = pd.DataFrame(cv_or_tf.transform(pos_df).todense(), columns=cv_or_tf.vocabulary_)
-
+	
 	# count up words
 	neg_counts = np.sum(neg_cv, axis=0)
 	neg_counts = neg_counts + 1 # to avoid division by 0 when calculating ratios (below)
@@ -82,7 +82,7 @@ def calculate_ratios(in_neg_df, in_pos_df, cv_or_tfidf='CV', nlp_params={}, info
 	else:
 		cv_or_tf = TfidfVectorizer(**nlp_params)
 
-	return all_counts, cv_or_tf 
+	return all_counts, cv_or_tf
 
 
 
