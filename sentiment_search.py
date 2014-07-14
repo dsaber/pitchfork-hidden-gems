@@ -22,6 +22,10 @@ import itertools
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.linear_model import LogisticRegression
 
+# to store
+import cPickle
+
+
 # to test (this is a relatively complex data pipeline) 
 # (See: Combinatorial Explosion) 
 PRODUCE_VOCAB = 	  { 
@@ -108,8 +112,8 @@ def main(scoring_func=metrics.roc_auc_score):
 						clf.fit(train_transformed, train_label)
 
 						this_score = scoring_func(test_label, clf.predict(test_transformed))
-						print this_score 
 						this_to_str = str(vocab_option) + str(nlp_option) + str(combos)
+						print this_to_str + ': ' + str(this_score)
 
 						if this_to_str not in result.keys():
 							result[this_to_str] = [this_score] 
@@ -120,7 +124,8 @@ def main(scoring_func=metrics.roc_auc_score):
 
 
 if __name__ == '__main__':
-	main() 
+	result = main() 
+	cPickle.dump(result, open('data/grid_search_result.pkl', 'w'))
 
 
 
