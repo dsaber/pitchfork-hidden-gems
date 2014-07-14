@@ -1,10 +1,21 @@
+# suppress .pyc
+import sys 
+sys.dont_write_bytecode = True 
+
+# standard
+import pandas as pd
+import numpy as np
+
+# text extraction/featurization
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+# for cross-validation
+from sklearn.cross_validation import train_test_split
 
 
 
-
-
-
-def produce_sentiment_data(in_df, neg_thresh=5.0, pos_thresh=8.0, reviewer='All', genre='All'):
+def produce_sentiment_data(in_df, neg_thresh=6.0, pos_thresh=8.0, reviewer='All', genre='All'):
 
 	'''This function is used to produce positive and negative data sets (i.e., DataFrames)
 	that are going to be used in model-building. The reviewer and genre fields are 
@@ -20,8 +31,42 @@ def produce_sentiment_data(in_df, neg_thresh=5.0, pos_thresh=8.0, reviewer='All'
 
 	neg = df['Score'] <= neg_thresh
 	pos = df['Score'] >= pos_thresh
-	to_classify = 
 
 	return df[~(neg | pos)], df[neg], df[pos] 
+
+
+def calculate_ratios(in_neg_df, in_pos_df, cv_params={}):
+
+	# get data ready
+	neg_df = in_neg_df.copy()
+	pos_df = in_pos_df.copy()
+	all_content = pd.concat([pos_df, neg_df])
+
+	# fit CountVectorizer
+	cv = CountVectorizer(**cv_params)
+	cv.fit(all_content)
+
+	# transform positive and negative content
+	neg_cv = pd.DataFrame(cv.transform(neg_df).todense(), columns=cv.vocabulary_)
+	pos_cv = pd.DataFrame(cv.transform(pos_df).todense(), columns=cv.vocabulary_)
+
+	# count up words
+	neg_counts = np.sum(neg_cv, axis=0)
+	neg_counts = neg_counts + 1 # to avoid division by 0 when calculating ratios (below)
+	pos_counts = np.sum(pos_cv, axis=0)
+	pos_counts = pos_counts + 1
+
+	all_counts = pd.DataFrame(neg_counts, columns=['Negative'])
+	all_counts['Positive'] = pos_counts
+
+	# calculate ratios
+	all_counts['Neg_Pos'] = (1.0 * all_counts['Negative'])/all_counts['Positive']
+	all_counts['Pos_Neg'] = (1.0 * all_counts['Positive'])/all_counts['Negative']
+
+	return all_counts
+
+
+
+
 
 
