@@ -11,7 +11,7 @@ import sys
 sys.dont_write_bytecode = True 
 
 # my sentiment analysis tools
-import sentiment_analysis as sa 
+import nlp_processing as nlpp
 
 # for cross-validation
 import sklearn.cross_validation as cross_validation 
@@ -59,7 +59,7 @@ def main(scoring_func=metrics.roc_auc_score, file_path='data/final_p4k.csv'):
 	result = { } 
 
 	df = pd.read_csv(file_path)
-	mid, neg, pos = sa.produce_sentiment_data(df)
+	mid, neg, pos = nlpp.produce_sentiment_data(df)
 
 	# create labels
 	neg_label = pd.DataFrame([0] * neg.shape[0])
@@ -118,7 +118,7 @@ def main(scoring_func=metrics.roc_auc_score, file_path='data/final_p4k.csv'):
 					voc_opt['in_neg_df'] = neg_train
 					voc_opt['in_pos_df'] = pos_train 
 
-					temp, nlp_preprocessor = sa.calculate_ratios(**voc_opt)
+					temp, nlp_preprocessor = nlpp.calculate_ratios(**voc_opt)
 					print temp 
 
 					# modeling process:
@@ -159,5 +159,5 @@ def main(scoring_func=metrics.roc_auc_score, file_path='data/final_p4k.csv'):
 
 if __name__ == '__main__':
 	result = main() 
-	cPickle.dump(result, open('grid_search/grid_search_complete.pkl', 'w'))
+	cPickle.dump(result, open('model_creation/grid_search/grid_search_complete.pkl', 'w'))
 
