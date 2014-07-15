@@ -13,7 +13,9 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from nltk.tokenize import wordpunct_tokenize
 from nltk.stem import WordNetLemmatizer
 
-# to incorporate Lemmatization
+# to incorporate Lemmatization (unless Lemmatization gives you a large
+# performance boost, I would avoid it -- the NLTK library takes a long, long,
+# long time)
 class LemmaTokenizer(object):
 	def __init__(self):
 		self.wnl = WordNetLemmatizer()
@@ -56,9 +58,9 @@ def calculate_ratios(in_neg_df, in_pos_df, cv_or_tfidf='CV', nlp_params={}, info
 	cv_or_tf.fit(all_content)
 
 	# including this because filtering based on information threshold 
-	# becomes silly when you consider higher ngram ranges
+	# becomes too computationally punishing with larger ngrams
 	if 'ngram_range' in nlp_params and nlp_params['ngram_range'] != (1, 1):
-		return "", cv_or_tf 
+		return "", cv_or_tf
 
 	# transform positive and negative content
 	neg_cv = pd.DataFrame(cv_or_tf.transform(neg_df).todense(), columns=cv_or_tf.vocabulary_)

@@ -34,19 +34,19 @@ import cPickle
 # (See: Combinatorial Explosion) 
 PRODUCE_VOCAB = 	  { 
 							'cv_or_tfidf': 		[ 'TFIDF' ],
-							'info_thresh': 		[ None, 1.1 ] 
+							'info_thresh': 		[ None ]
 }
 NLP_PARAMS = 		  { 
 							'tokenizer': 		[ None ],
-							'ngram_range': 		[ (1, 1), (1, 2), (1, 3), (1, 4), (1, 5) ], 
-							'min_df': 			[ 7, 9, 10, 11, 13, 19, 41 ]
+							'ngram_range': 		[ (1, 2), (1, 3), (1, 4) ], 
+							'min_df': 			[ 7, 9, 11 ]
 }
 NAMES = 			  { 
 							LogisticRegression: 'LogisticRegression'
 }
 MODELS = 			  { 
 							LogisticRegression: { 'penalty': 		[ 'l2' ],
-								  						'C':		[ 50.0, 100.0, 200.0, 500.0 ] }
+								  						'C':		[ 100.0, 500.0 ] }
 }
 
 
@@ -56,7 +56,7 @@ def main(scoring_func=metrics.roc_auc_score, file_path='data/final_p4k.csv'):
 	# our result is going to be a dictionary where keys correspond to 
 	# combinations of NLP features crossed with combinations of Algorithms/Associated 
 	# Tuning Parameters
-	result = { } 
+	result = {} 
 
 	df = pd.read_csv(file_path)
 	mid, neg, pos = nlpp.produce_sentiment_data(df)
@@ -66,11 +66,11 @@ def main(scoring_func=metrics.roc_auc_score, file_path='data/final_p4k.csv'):
 	pos_label = pd.DataFrame([1] * pos.shape[0]) 
 
 	# prepare for cross validation
-	neg_kf = cross_validation.KFold(neg.shape[0], n_folds=4, shuffle=True)
-	pos_kf = cross_validation.KFold(pos.shape[0], n_folds=4, shuffle=True)
+	neg_kf = cross_validation.KFold(neg.shape[0], n_folds=3, shuffle=True)
+	pos_kf = cross_validation.KFold(pos.shape[0], n_folds=3, shuffle=True)
 
 	# create Vocab/NLP combinations; NOTE: I needed to convert them to 
-	# lists because lazy evaluation causes a very strange error
+	# lists because lazy evaluation causes some strange behavior
 	vocab_options = list(itertools.product(*PRODUCE_VOCAB.values()))
 	nlp_options   = list(itertools.product(*NLP_PARAMS.values()))
 
