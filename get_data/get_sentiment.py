@@ -1,6 +1,13 @@
+# suppress .pyc
+import sys 
+sys.dont_write_bytecode = True 
+
 # interact with NLTK Sentiment Analysis API
 import requests
 from _variables import * 
+
+# TextBlob
+from textblob import TextBlob
 
 # standard 
 import pandas as pd
@@ -20,13 +27,21 @@ def get_nltk_sentiment(review_content, api_url='https://japerk-text-processing.p
 	except:
 		return 'NA', np.nan, np.nan, np.nan 
 
+
+def get_text_blob_sentiment(review_content):
+	review = TextBlob(review_content)
+	return review.sentiment.polarity
+
+
 if __name__ == '__main__':
 
-	df = pd.read_csv('../data/p4k_complete_data.csv')
+	df = pd.read_csv('data/final_p4k.csv')
 	df['NLTK_label'] = ''
 	df['NLTK_pos'] = 0.0
 	df['NLTK_neutral'] = 0.0
 	df['NLTK_neg'] = 0.0
+
+	df['TB_pos'] = 0.0
 
 	for i in xrange(df.shape[0]):
 		print i 
@@ -37,6 +52,7 @@ if __name__ == '__main__':
 		df['NLTK_pos'][i] = pos
 		df['NLTK_neutral'][i] = neutral
 		df['NLTK_neg'][i] = neg
+		df['TB_pos'][i] = get_text_blob_sentiment(df['Content'][i])
 
-	df.to_csv('data/final_data.csv')
-	df.to_json('data/final_data.json') 
+	df.to_csv('data/final_p4k2.csv')
+	df.to_json('data/final_p4k2.json') 
