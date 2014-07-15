@@ -39,7 +39,7 @@ PRODUCE_VOCAB = 	  {
 NLP_PARAMS = 		  { 
 							'tokenizer': 		[ None ],
 							'ngram_range': 		[ (1, 1), (1, 2), (1, 3), (1, 4), (1, 5) ], 
-							'min_df': 			[ 7, 9, 11, 13, 19 ]
+							'min_df': 			[ 7, 9, 10, 11, 13, 19, 41 ]
 }
 NAMES = 			  { 
 							LogisticRegression: 'LogisticRegression'

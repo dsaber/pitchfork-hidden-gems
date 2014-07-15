@@ -22,7 +22,7 @@ def get_nltk_sentiment(review_content, api_url='https://japerk-text-processing.p
 
 if __name__ == '__main__':
 
-	df = pd.read_csv('data/p4k_complete_data.csv')
+	df = pd.read_csv('../data/p4k_complete_data.csv')
 	df['NLTK_label'] = ''
 	df['NLTK_pos'] = 0.0
 	df['NLTK_neutral'] = 0.0

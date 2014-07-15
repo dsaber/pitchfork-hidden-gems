@@ -116,10 +116,10 @@ if __name__ == '__main__':
 	result = scrape_pitchfork()
 
 	# pickle result 
-	cPickle.dump(result, open('data/raw_data_dump.pkl', 'w'))
+	cPickle.dump(result, open('../data/raw_data_dump.pkl', 'w'))
 
 	# convert to DataFrame and store as json and as csv
 	df = pd.DataFrame(result)
-	df.to_csv('data/p4k_data.csv')
-	df.to_json('data/p4k_data.json')
+	df.to_csv('../data/p4k_data.csv')
+	df.to_json('../data/p4k_data.json')
 
