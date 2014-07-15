@@ -9,3 +9,5 @@ data
 db
 
 model_creation/grid_search/old_pickles
+
+*.pkl

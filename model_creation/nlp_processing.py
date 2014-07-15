@@ -43,7 +43,7 @@ def produce_sentiment_data(in_df, neg_thresh=6.0, pos_thresh=8.0, reviewer='All'
 	return df[~(neg | pos)], df[neg], df[pos] 
 
 
-def calculate_ratios(in_neg_df, in_pos_df, cv_or_tfidf='CV', nlp_params={}, info_thresh=None):
+def build_cv_or_tfidf(in_neg_df, in_pos_df, cv_or_tfidf='CV', nlp_params={}, info_thresh=None):
 
 	# get data ready
 	neg_df = in_neg_df.copy()
@@ -60,7 +60,7 @@ def calculate_ratios(in_neg_df, in_pos_df, cv_or_tfidf='CV', nlp_params={}, info
 	# including this because filtering based on information threshold 
 	# becomes too computationally punishing with larger ngrams
 	if 'ngram_range' in nlp_params and nlp_params['ngram_range'] != (1, 1):
-		return "", cv_or_tf
+		return cv_or_tf
 
 	# transform positive and negative content
 	neg_cv = pd.DataFrame(cv_or_tf.transform(neg_df).todense(), columns=cv_or_tf.vocabulary_)
@@ -89,5 +89,5 @@ def calculate_ratios(in_neg_df, in_pos_df, cv_or_tfidf='CV', nlp_params={}, info
 	else:
 		cv_or_tf = TfidfVectorizer(**nlp_params)
 
-	return all_counts, cv_or_tf
+	return cv_or_tf
 

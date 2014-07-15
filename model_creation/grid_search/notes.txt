@@ -8,6 +8,7 @@ General Notes in Live-Aciton Time-Series Form:
 slightly better than (1, 1) with most LogisticRegression
 - (1, 3) ngrams not really performing well with CV's - taking them out since they're quite expensive
 and will test again when I get to testing TF-IDF's
+- TruncatedSVD not performing well -- removing from GridSearch consideration
 
 
 

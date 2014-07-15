@@ -118,8 +118,7 @@ def main(scoring_func=metrics.roc_auc_score, file_path='data/final_p4k.csv'):
 					voc_opt['in_neg_df'] = neg_train
 					voc_opt['in_pos_df'] = pos_train 
 
-					temp, nlp_preprocessor = nlpp.calculate_ratios(**voc_opt)
-					print temp 
+					nlp_preprocessor = nlpp.build_cv_or_tfidf(**voc_opt)
 
 					# modeling process:
 					# (1) fit CV/TFIDF on training set; (2) transform training set with 
