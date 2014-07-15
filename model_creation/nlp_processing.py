@@ -57,9 +57,8 @@ def calculate_ratios(in_neg_df, in_pos_df, cv_or_tfidf='CV', nlp_params={}, info
 
 	# including this because filtering based on information threshold 
 	# becomes silly when you consider higher ngram ranges
-	if nlp_params != {}:
-		if nlp_params['ngram_range'] != (1, 1):
-			return "", cv_or_tf 
+	if 'ngram_range' in nlp_params and nlp_params['ngram_range'] != (1, 1):
+		return "", cv_or_tf 
 
 	# transform positive and negative content
 	neg_cv = pd.DataFrame(cv_or_tf.transform(neg_df).todense(), columns=cv_or_tf.vocabulary_)
