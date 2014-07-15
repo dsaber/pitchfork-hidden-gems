@@ -1,0 +1,162 @@
+('Type', 'Info_Thresh')('N-Gram Range', 'Tokenizer', 'Min_DF')(Model(Model-Specific Parameters))
+
+
+
+General Notes in Live-Aciton Time-Series Form:
+- MultinomialNB performing very poorly - removing from GridSearch consideration
+- Without incorporating Information Threshold, (1, 2) ngrams performing 
+slightly better than (1, 1) with most LogisticRegression
+- (1, 3) ngrams not really performing well with CV's - taking them out since they're quite expensive
+and will test again when I get to testing TF-IDF's
+
+
+
+- First Complete Search (GENERAL)
+First Grid Search (using ROC_AUC as our Metric with 3-Fold CV):
+
+Large Grid Search simply trying to get a feel for what the best combination of 
+parameters might be. Based on the results in the Appendix below, I elect to focus in on 
+TF-IDF with a relatively high document frequency (in the 9 range) and a heavily 
+regularized Logistic Regression
+
+
+
+- Second Complete Search (HONING IN)
+Second Grid Search (using ROC_AUC as our Metric with 3-Fold CV):
+
+It looks like the winner is TF-IDF with (1, 2) ngrams and minimum document frequency of 7,
+fed into a Logistic Regression model with an 'L2' Penalty of 100.0
+
+
+
+- Third Complete Grid Search (HONING IN):
+Third Grid Search (using ROC_AUC as our Metric with 3-Fold CV):
+
+Interestingly (i.e., through sheer luck), our winner from Round 1 is our Round 2 winner. 
+Further tweaks don't really do much.
+
+
+ - Fourth Complete Grid Search (Testing (1, 3) ngrams with TF-IDF)
+ Note that we didn't use (1, 3) ngrams with CV as per notes above...
+ Fourth Grid Search (using ROC_AUC as our Metric with 3-Fold CV):
+
+ There's a slight improvement using (1, 3) ngrams with Logistic Regression -- 86.99 versus 86.72. 
+
+ *** This is likely going to be my final choice; however, I'm going to run one last gigantic grid search 
+ overnight *** 
+
+
+
+ - Fifth and Final Grid Search (HONING IN)
+ Fifth Grid Search (using ROC_AUC as our Metric with 4-Fold CV):
+
+ pass 
+
+
+
+---------- APPENDIX ----------
+
+FIRST SEARCH:
+
+{"('CV', 1.5)((1, 1), None, 17)LogisticRegression('l2', 10.0)": 0.79543130914339566,
+ "('CV', 1.5)((1, 1), None, 17)LogisticRegression('l2', 100.0)": 0.79008957563079518,
+ "('CV', 1.5)((1, 1), None, 17)LogisticRegression('l2', 1000.0)": 0.78825158868253509,
+ "('CV', 1.5)((1, 1), None, 5)LogisticRegression('l2', 10.0)": 0.81717288297580304,
+ "('CV', 1.5)((1, 1), None, 5)LogisticRegression('l2', 100.0)": 0.81314478150886493,
+ "('CV', 1.5)((1, 1), None, 5)LogisticRegression('l2', 1000.0)": 0.81147502706718411,
+ "('CV', 1.5)((1, 1), None, 9)LogisticRegression('l2', 10.0)": 0.80069341561106244,
+ "('CV', 1.5)((1, 1), None, 9)LogisticRegression('l2', 100.0)": 0.79384226766508137,
+ "('CV', 1.5)((1, 1), None, 9)LogisticRegression('l2', 1000.0)": 0.79350190030499734,
+ "('CV', None)((1, 1), None, 17)LogisticRegression('l2', 10.0)": 0.82460082921866362,
+ "('CV', None)((1, 1), None, 17)LogisticRegression('l2', 100.0)": 0.82220521348186804,
+ "('CV', None)((1, 1), None, 17)LogisticRegression('l2', 1000.0)": 0.82300067801313992,
+ "('CV', None)((1, 1), None, 5)LogisticRegression('l2', 10.0)": 0.82694137101514842,
+ "('CV', None)((1, 1), None, 5)LogisticRegression('l2', 100.0)": 0.82229726258127644,
+ "('CV', None)((1, 1), None, 5)LogisticRegression('l2', 1000.0)": 0.82245758527214097,
+ "('CV', None)((1, 1), None, 9)LogisticRegression('l2', 10.0)": 0.82454677405317744,
+ "('CV', None)((1, 1), None, 9)LogisticRegression('l2', 100.0)": 0.82108849956853103,
+ "('CV', None)((1, 1), None, 9)LogisticRegression('l2', 1000.0)": 0.82204499469561598,
+ "('CV', None)((1, 2), None, 17)LogisticRegression('l2', 10.0)": 0.8394702845996932,
+ "('CV', None)((1, 2), None, 17)LogisticRegression('l2', 100.0)": 0.8395076741112989,
+ "('CV', None)((1, 2), None, 17)LogisticRegression('l2', 1000.0)": 0.8410711956624719,
+ "('CV', None)((1, 2), None, 5)LogisticRegression('l2', 10.0)": 0.84454720652813009,
+ "('CV', None)((1, 2), None, 5)LogisticRegression('l2', 100.0)": 0.84298352954201883,
+ "('CV', None)((1, 2), None, 5)LogisticRegression('l2', 1000.0)": 0.8428322908766317,
+ "('CV', None)((1, 2), None, 9)LogisticRegression('l2', 10.0)": 0.84242698837606922,
+ "('CV', None)((1, 2), None, 9)LogisticRegression('l2', 100.0)": 0.84247303024320885,
+ "('CV', None)((1, 2), None, 9)LogisticRegression('l2', 1000.0)": 0.84142012879091299,
+ "('TFIDF', 1.5)((1, 1), None, 17)LogisticRegression('l2', 10.0)": 0.72998912004772964,
+ "('TFIDF', 1.5)((1, 1), None, 17)LogisticRegression('l2', 100.0)": 0.70478197771452444,
+ "('TFIDF', 1.5)((1, 1), None, 17)LogisticRegression('l2', 1000.0)": 0.68534319292283341,
+ "('TFIDF', 1.5)((1, 1), None, 5)LogisticRegression('l2', 10.0)": 0.72193774150466128,
+ "('TFIDF', 1.5)((1, 1), None, 5)LogisticRegression('l2', 100.0)": 0.70675603417986654,
+ "('TFIDF', 1.5)((1, 1), None, 5)LogisticRegression('l2', 1000.0)": 0.68123284655681127,
+ "('TFIDF', 1.5)((1, 1), None, 9)LogisticRegression('l2', 10.0)": 0.70767622868387381,
+ "('TFIDF', 1.5)((1, 1), None, 9)LogisticRegression('l2', 100.0)": 0.68349116666314591,
+ "('TFIDF', 1.5)((1, 1), None, 9)LogisticRegression('l2', 1000.0)": 0.66397691226073074,
+ "('TFIDF', None)((1, 1), None, 17)LogisticRegression('l2', 10.0)": 0.84617559266786824,
+ "('TFIDF', None)((1, 1), None, 17)LogisticRegression('l2', 100.0)": 0.84402644771190793,
+ "('TFIDF', None)((1, 1), None, 17)LogisticRegression('l2', 1000.0)": 0.83676489074805238,
+ "('TFIDF', None)((1, 1), None, 5)LogisticRegression('l2', 10.0)": 0.84700216598367051,
+ "('TFIDF', None)((1, 1), None, 5)LogisticRegression('l2', 100.0)": 0.84684506094371681,
+ "('TFIDF', None)((1, 1), None, 5)LogisticRegression('l2', 1000.0)": 0.84116156157857069,
+ "('TFIDF', None)((1, 1), None, 9)LogisticRegression('l2', 10.0)": 0.84689774636011317,
+ "('TFIDF', None)((1, 1), None, 9)LogisticRegression('l2', 100.0)": 0.84738371029371651,
+ "('TFIDF', None)((1, 1), None, 9)LogisticRegression('l2', 1000.0)": 0.84094518080744141,
+ "('TFIDF', None)((1, 2), None, 17)LogisticRegression('l2', 10.0)": 0.8583611683110709,
+ "('TFIDF', None)((1, 2), None, 17)LogisticRegression('l2', 100.0)": 0.86245868336633802,
+ "('TFIDF', None)((1, 2), None, 17)LogisticRegression('l2', 1000.0)": 0.85938276500129851,
+ "('TFIDF', None)((1, 2), None, 5)LogisticRegression('l2', 10.0)": 0.85102674865160621,
+ "('TFIDF', None)((1, 2), None, 5)LogisticRegression('l2', 100.0)": 0.85880741630522583,
+ "('TFIDF', None)((1, 2), None, 5)LogisticRegression('l2', 1000.0)": 0.85816725453468379,
+ "('TFIDF', None)((1, 2), None, 9)LogisticRegression('l2', 10.0)": 0.85563430387453987,
+ "('TFIDF', None)((1, 2), None, 9)LogisticRegression('l2', 100.0)": 0.86175086932211109,
+ "('TFIDF', None)((1, 2), None, 9)LogisticRegression('l2', 1000.0)": 0.85975565695581035}
+
+
+
+SECOND SEARCH: 
+
+{"{'cv_or_tfidf': 'TF-IDF', 'info_thresh': None}((1, 1), None, 1)LogisticRegression('l2', 0.1)": 0.73443006130320843,
+ "{'cv_or_tfidf': 'TF-IDF', 'info_thresh': None}((1, 1), None, 1)LogisticRegression('l2', 1.0)": 0.81078913046909296,
+ "{'cv_or_tfidf': 'TF-IDF', 'info_thresh': None}((1, 1), None, 1)LogisticRegression('l2', 10.0)": 0.84702642340971934,
+ "{'cv_or_tfidf': 'TF-IDF', 'info_thresh': None}((1, 1), None, 1)LogisticRegression('l2', 100.0)": 0.84969914651556822,
+ "{'cv_or_tfidf': 'TF-IDF', 'info_thresh': None}((1, 1), None, 3)LogisticRegression('l2', 0.1)": 0.75182549982761993,
+ "{'cv_or_tfidf': 'TF-IDF', 'info_thresh': None}((1, 1), None, 3)LogisticRegression('l2', 1.0)": 0.82279089302630759,
+ "{'cv_or_tfidf': 'TF-IDF', 'info_thresh': None}((1, 1), None, 3)LogisticRegression('l2', 10.0)": 0.8502502250937134,
+ "{'cv_or_tfidf': 'TF-IDF', 'info_thresh': None}((1, 1), None, 3)LogisticRegression('l2', 100.0)": 0.85152023296150292,
+ "{'cv_or_tfidf': 'TF-IDF', 'info_thresh': None}((1, 1), None, 7)LogisticRegression('l2', 0.1)": 0.75682265829777295,
+ "{'cv_or_tfidf': 'TF-IDF', 'info_thresh': None}((1, 1), None, 7)LogisticRegression('l2', 1.0)": 0.82465455491466633,
+ "{'cv_or_tfidf': 'TF-IDF', 'info_thresh': None}((1, 1), None, 7)LogisticRegression('l2', 10.0)": 0.8504207887023828,
+ "{'cv_or_tfidf': 'TF-IDF', 'info_thresh': None}((1, 1), None, 7)LogisticRegression('l2', 100.0)": 0.85189186411907514,
+ "{'cv_or_tfidf': 'TF-IDF', 'info_thresh': None}((1, 2), None, 3)LogisticRegression('l2', 0.1)": 0.73652924769776285,
+ "{'cv_or_tfidf': 'TF-IDF', 'info_thresh': None}((1, 2), None, 3)LogisticRegression('l2', 1.0)": 0.8158592880482054,
+ "{'cv_or_tfidf': 'TF-IDF', 'info_thresh': None}((1, 2), None, 3)LogisticRegression('l2', 10.0)": 0.85381749395872897,
+ "{'cv_or_tfidf': 'TF-IDF', 'info_thresh': None}((1, 2), None, 3)LogisticRegression('l2', 100.0)": 0.86159573803158285,
+ "{'cv_or_tfidf': 'TF-IDF', 'info_thresh': None}((1, 2), None, 7)LogisticRegression('l2', 0.1)": 0.75072394199741888,
+ "{'cv_or_tfidf': 'TF-IDF', 'info_thresh': None}((1, 2), None, 7)LogisticRegression('l2', 1.0)": 0.82399404858205605,
+ "{'cv_or_tfidf': 'TF-IDF', 'info_thresh': None}((1, 2), None, 7)LogisticRegression('l2', 10.0)": 0.85827718446231549,
+ "{'cv_or_tfidf': 'TF-IDF', 'info_thresh': None}((1, 2), None, 7)LogisticRegression('l2', 100.0)": 0.86397538587568123}
+
+
+
+THIRD SEARCH: 
+
+{"('TF-IDF', None)((1, 2), None, 11)LogisticRegression('l2', 100.0)": 0.86522499218155924,
+ "('TF-IDF', None)((1, 2), None, 11)LogisticRegression('l2', 1000.0)": 0.86375109486685686,
+ "('TF-IDF', None)((1, 2), None, 11)LogisticRegression('l2', 50.0)": 0.86569868907364533,
+ "('TF-IDF', None)((1, 2), None, 11)LogisticRegression('l2', 500.0)": 0.86612035650197727,
+ "('TF-IDF', None)((1, 2), None, 5)LogisticRegression('l2', 100.0)": 0.86603806512010495,
+ "('TF-IDF', None)((1, 2), None, 5)LogisticRegression('l2', 1000.0)": 0.8626654719986343,
+ "('TF-IDF', None)((1, 2), None, 5)LogisticRegression('l2', 50.0)": 0.86591368149607773,
+ "('TF-IDF', None)((1, 2), None, 5)LogisticRegression('l2', 500.0)": 0.86333731276313364,
+ "('TF-IDF', None)((1, 2), None, 7)LogisticRegression('l2', 100.0)": 0.86716062851255404,
+ "('TF-IDF', None)((1, 2), None, 7)LogisticRegression('l2', 1000.0)": 0.86289979653801951,
+ "('TF-IDF', None)((1, 2), None, 7)LogisticRegression('l2', 50.0)": 0.86384397309326155,
+ "('TF-IDF', None)((1, 2), None, 7)LogisticRegression('l2', 500.0)": 0.86339242133831517,
+ "('TF-IDF', None)((1, 2), None, 9)LogisticRegression('l2', 100.0)": 0.86403303294019729,
+ "('TF-IDF', None)((1, 2), None, 9)LogisticRegression('l2', 1000.0)": 0.86343886024052729,
+ "('TF-IDF', None)((1, 2), None, 9)LogisticRegression('l2', 50.0)": 0.86205119930712504,
+ "('TF-IDF', None)((1, 2), None, 9)LogisticRegression('l2', 500.0)": 0.86455685226823953} 
+
+

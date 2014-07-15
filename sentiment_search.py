@@ -33,117 +33,131 @@ import cPickle
 # to test (this is a relatively complex data pipeline) 
 # (See: Combinatorial Explosion) 
 PRODUCE_VOCAB = 	  { 
-							'cv_or_tfidf': 		[ 'CV', 'TF-IDF' ],
-							'info_thresh': 		[ None, 1.5, 2.0, 3.0, 4.0, 5.0 ] 
+							'cv_or_tfidf': 		[ 'TFIDF' ],
+							'info_thresh': 		[ None, 1.1 ] 
 }
 NLP_PARAMS = 		  { 
-							'tokenizer': 		[ None, sa.LemmaTokenizer() ],
-							'ngram_range': 		[ (1, 1), (1, 2), (1, 3), (1, 4), (1, 5), 
-								  				(2, 3), (2, 4), (2, 5), (3, 5) ],
-							'min_df': 			[ 1, 2, 3, 5, 7, 10 ] 
+							'tokenizer': 		[ None ],
+							'ngram_range': 		[ (1, 1), (1, 2), (1, 3), (1, 4), (1, 5) ], 
+							'min_df': 			[ 7, 9, 11, 13, 19 ]
 }
 NAMES = 			  { 
-							LogisticRegression: 'LogisticRegression',
-							MultinomialNB:		'MultinomialNB'
+							LogisticRegression: 'LogisticRegression'
 }
 MODELS = 			  { 
-							LogisticRegression: { 'penalty': 		['l1', 'l2'],
-								  						'C':		[0.001, 0.01, 0.1, 1.0, 10.0] },
-							MultinomialNB: 		{ 	'alpha': 		[0.001, 0.01, 0.1, 1.0, 10.0] }
+							LogisticRegression: { 'penalty': 		[ 'l2' ],
+								  						'C':		[ 50.0, 100.0, 200.0, 500.0 ] }
 }
 
 
 # This is essentially a gigantic grid search
-def main(scoring_func=metrics.roc_auc_score): 
+def main(scoring_func=metrics.roc_auc_score, file_path='data/final_p4k.csv'):
 
+	# our result is going to be a dictionary where keys correspond to 
+	# combinations of NLP features crossed with combinations of Algorithms/Associated 
+	# Tuning Parameters
 	result = { } 
-	
-	df = pd.read_csv('data/final_p4k.csv') 
+
+	df = pd.read_csv(file_path)
 	mid, neg, pos = sa.produce_sentiment_data(df)
+
+	# create labels
 	neg_label = pd.DataFrame([0] * neg.shape[0])
 	pos_label = pd.DataFrame([1] * pos.shape[0]) 
 
 	# prepare for cross validation
-	neg_kf = cross_validation.KFold(neg.shape[0], n_folds=5, shuffle=True)
-	pos_kf = cross_validation.KFold(pos.shape[0], n_folds=5, shuffle=True)
+	neg_kf = cross_validation.KFold(neg.shape[0], n_folds=4, shuffle=True)
+	pos_kf = cross_validation.KFold(pos.shape[0], n_folds=4, shuffle=True)
 
-	# loop through train/test sets for any given combination of 
+	# create Vocab/NLP combinations; NOTE: I needed to convert them to 
+	# lists because lazy evaluation causes a very strange error
+	vocab_options = list(itertools.product(*PRODUCE_VOCAB.values()))
+	nlp_options   = list(itertools.product(*NLP_PARAMS.values()))
+
+	# loop through train/test folds for any given combination of 
 	# PRODUCE_VOCAB, NLP_PARAMS, and MODELS
 	for n, p in zip(neg_kf, pos_kf):
 		print 'New Fold'
+		print vocab_options
 		
-		neg_train = n[0]
-		neg_train_label = neg_label.values[neg_train]
-		neg_test = n[1]
-		neg_test_label = neg_label.values[neg_test]
+		# create training and test sets for this fold
+		neg_train_index 	= n[0]
+		neg_test_index 		= n[1]
 
-		pos_train = p[0]
-		pos_train_label = pos_label.values[pos_train]
-		pos_test = p[1]
-		pos_test_label = pos_label.values[pos_test]
+		neg_train 			= pd.DataFrame(neg['Content'].values[neg_train_index], columns=['Content'])['Content']
+		neg_test 			= pd.DataFrame(neg['Content'].values[neg_test_index], columns=['Content'])['Content']
+		neg_train_label 	= neg_label.values[neg_train_index]
+		neg_test_label 		= neg_label.values[neg_test_index]
 
-		train_content = pd.DataFrame(np.concatenate([neg['Content'].values[neg_train], pos['Content'].values[pos_train]]), columns=['Content'])['Content']
-		train_label   = np.concatenate([neg_train_label, pos_train_label]).ravel() 
-		test_content = pd.DataFrame(np.concatenate([neg['Content'].values[neg_test], pos['Content'].values[pos_test]]), columns=['Content'])['Content']
-		test_label   = np.concatenate([neg_test_label, pos_test_label]).ravel()
+		pos_train_index 	= p[0]
+		pos_test_index 		= p[1]
 
-		vocab_options = itertools.product(*PRODUCE_VOCAB.values())
-		nlp_options = itertools.product(*NLP_PARAMS.values())
+		pos_train 			= pd.DataFrame(pos['Content'].values[pos_train_index], columns=['Content'])['Content']
+		pos_test 			= pd.DataFrame(pos['Content'].values[pos_test_index], columns=['Content'])['Content']
+		pos_train_label 	= pos_label.values[pos_train_index]
+		pos_test_label 		= pos_label.values[pos_test_index]
+
+		# consolidate all data for training/testing
+		train_content 		= pd.concat([neg_train, pos_train])
+		train_label  	    = np.concatenate([neg_train_label, pos_train_label]).ravel() 
+		test_content 		= pd.concat([neg_test, pos_test])
+		test_label   		= np.concatenate([neg_test_label, pos_test_label]).ravel()
+
 
 		for vocab_option in vocab_options:
 			voc_opt = { k:v for k, v in zip(PRODUCE_VOCAB.keys(), vocab_option) }
 
 			for nlp_option in nlp_options: 
 				nlp_opt = { k:v for k, v in zip(NLP_PARAMS.keys(), nlp_option) } 
-				voc_opt['nlp_params'] = nlp_opt 
-				voc_opt['in_neg_df'] = pd.DataFrame(neg['Content'].values[neg_train], columns=['Content'])['Content']
-				voc_opt['in_pos_df'] = pd.DataFrame(pos['Content'].values[pos_train], columns=['Content'])['Content']
 
-				temp, nlp_preprocessor = sa.calculate_ratios(**voc_opt)
-				print temp 
+				# Avoid some computationally expensive processes
+				if nlp_opt['ngram_range'] != (1, 1) and (voc_opt['info_thresh'] is not None or nlp_opt['min_df'] == 1):
+					pass
+				else: 
+					voc_opt['nlp_params'] = nlp_opt
+					voc_opt['in_neg_df'] = neg_train
+					voc_opt['in_pos_df'] = pos_train 
 
+					temp, nlp_preprocessor = sa.calculate_ratios(**voc_opt)
+					print temp 
 
-				for model, param_dict in MODELS.iteritems():
-					combos = itertools.product(*param_dict.values())
+					# modeling process:
+					# (1) fit CV/TFIDF on training set; (2) transform training set with 
+					# NLP processing tool from (1); (3) fit model on transformed training set 
+					# from (2); (4) transform test set using NLP processing tool from (1);
+					# (5) compute scoring metric by using fitted model on transformed test data 
+					for model, param_dict in MODELS.iteritems():
+						combos = itertools.product(*param_dict.values())
 
-					for combo in combos:
-						pdict = { k:v for k, v in zip(param_dict.keys(), combo) } 
-						clf = model(**pdict)
+						for combo in combos:
+							pdict = { k:v for k, v in zip(param_dict.keys(), combo) } 
+							clf = model(**pdict)
 
-						train_transformed = nlp_preprocessor.fit_transform(train_content)
-						test_transformed  = nlp_preprocessor.transform(test_content)
+							# (1)-(2)
+							train_transformed = nlp_preprocessor.fit_transform(train_content)
+			
+							# (3) 
+							clf.fit(train_transformed, train_label)
 
-						clf.fit(train_transformed, train_label)
+							# (4) 
+							test_transformed  = nlp_preprocessor.transform(test_content)
 
-						this_score = scoring_func(test_label, clf.predict(test_transformed))
-						this_to_str = str(vocab_option) + str(nlp_option) + str(combo)
-						print this_to_str + ': ' + str(this_score)
+							# (5)
+							this_score = scoring_func(test_label, clf.predict(test_transformed))
 
-						if this_to_str not in result.keys():
-							result[this_to_str] = [this_score] 
-						else:
-							result[this_to_str].append(this_score)
+							# Keep track of information in result
+							this_to_str = str(vocab_option) + str(nlp_option) + NAMES[model] + str(combo)
+							if this_to_str not in result.keys():
+								result[this_to_str] = [this_score] 
+							else:
+								result[this_to_str].append(this_score)
+
+							print this_to_str + ': ' + str(this_score)
 
 	return result 
 
 
 if __name__ == '__main__':
 	result = main() 
-	cPickle.dump(result, open('data/grid_search_result.pkl', 'w'))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	cPickle.dump(result, open('grid_search/grid_search_complete.pkl', 'w'))
 

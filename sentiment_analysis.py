@@ -1,6 +1,6 @@
 # suppress .pyc
 import sys 
-sys.dont_write_bytecode = True 
+sys.dont_write_bytecode = True
 
 # standard
 import pandas as pd
@@ -55,10 +55,16 @@ def calculate_ratios(in_neg_df, in_pos_df, cv_or_tfidf='CV', nlp_params={}, info
 		cv_or_tf = TfidfVectorizer(**nlp_params)
 	cv_or_tf.fit(all_content)
 
+	# including this because filtering based on information threshold 
+	# becomes silly when you consider higher ngram ranges
+	if nlp_params != {}:
+		if nlp_params['ngram_range'] != (1, 1):
+			return "", cv_or_tf 
+
 	# transform positive and negative content
 	neg_cv = pd.DataFrame(cv_or_tf.transform(neg_df).todense(), columns=cv_or_tf.vocabulary_)
 	pos_cv = pd.DataFrame(cv_or_tf.transform(pos_df).todense(), columns=cv_or_tf.vocabulary_)
-	
+
 	# count up words
 	neg_counts = np.sum(neg_cv, axis=0)
 	neg_counts = neg_counts + 1 # to avoid division by 0 when calculating ratios (below)
@@ -75,7 +81,7 @@ def calculate_ratios(in_neg_df, in_pos_df, cv_or_tfidf='CV', nlp_params={}, info
 	if info_thresh is not None:
 		all_counts = all_counts[(all_counts['Neg_Pos'] >= info_thresh) | (all_counts['Pos_Neg'] >= info_thresh)]
 
-	# remake CV/TF-IDF with selected vocabulary
+	# remake CV/TF-IDF with pruned vocabulary (this could be its own function)
 	nlp_params['vocabulary'] = all_counts.index 
 	if cv_or_tfidf == 'CV':
 		cv_or_tf = CountVectorizer(**nlp_params) 
@@ -83,6 +89,4 @@ def calculate_ratios(in_neg_df, in_pos_df, cv_or_tfidf='CV', nlp_params={}, info
 		cv_or_tf = TfidfVectorizer(**nlp_params)
 
 	return all_counts, cv_or_tf
-
-
 
