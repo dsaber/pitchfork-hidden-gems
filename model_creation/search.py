@@ -51,7 +51,8 @@ MODELS = 			  {
 
 
 # This is essentially a gigantic grid search
-def main(scoring_func=metrics.roc_auc_score, file_path='data/final_p4k.csv'):
+def main(scoring_func=metrics.roc_auc_score, file_path='data/final_p4k.csv', 
+		 vocab_dict=PRODUCE_VOCAB, nlp_dict=NLP_PARAMS, model_names=NAMES, models=MODELS):
 
 	# our result is going to be a dictionary where keys correspond to 
 	# combinations of NLP features crossed with combinations of Algorithms/Associated 
@@ -71,11 +72,11 @@ def main(scoring_func=metrics.roc_auc_score, file_path='data/final_p4k.csv'):
 
 	# create Vocab/NLP combinations; NOTE: I needed to convert them to 
 	# lists because lazy evaluation causes some strange behavior
-	vocab_options = list(itertools.product(*PRODUCE_VOCAB.values()))
-	nlp_options   = list(itertools.product(*NLP_PARAMS.values()))
+	vocab_options = list(itertools.product(*vocab_dict.values()))
+	nlp_options   = list(itertools.product(*nlp_dict.values()))
 
 	# loop through train/test folds for any given combination of 
-	# PRODUCE_VOCAB, NLP_PARAMS, and MODELS
+	# vocab_dict, nlp_dict, and models
 	for n, p in zip(neg_kf, pos_kf):
 		print 'New Fold'
 		
@@ -104,10 +105,10 @@ def main(scoring_func=metrics.roc_auc_score, file_path='data/final_p4k.csv'):
 
 
 		for vocab_option in vocab_options:
-			voc_opt = { k:v for k, v in zip(PRODUCE_VOCAB.keys(), vocab_option) }
+			voc_opt = { k:v for k, v in zip(vocab_dict.keys(), vocab_option) }
 
 			for nlp_option in nlp_options: 
-				nlp_opt = { k:v for k, v in zip(NLP_PARAMS.keys(), nlp_option) } 
+				nlp_opt = { k:v for k, v in zip(nlp_dict.keys(), nlp_option) } 
 
 				# Avoid some computationally expensive processes
 				if nlp_opt['ngram_range'] != (1, 1) and (voc_opt['info_thresh'] is not None or nlp_opt['min_df'] == 1):
@@ -124,7 +125,7 @@ def main(scoring_func=metrics.roc_auc_score, file_path='data/final_p4k.csv'):
 					# NLP processing tool from (1); (3) fit model on transformed training set 
 					# from (2); (4) transform test set using NLP processing tool from (1);
 					# (5) compute scoring metric by using fitted model on transformed test data 
-					for model, param_dict in MODELS.iteritems():
+					for model, param_dict in models.iteritems():
 						combos = itertools.product(*param_dict.values())
 
 						for combo in combos:
@@ -144,7 +145,7 @@ def main(scoring_func=metrics.roc_auc_score, file_path='data/final_p4k.csv'):
 							this_score = scoring_func(test_label, clf.predict(test_transformed))
 
 							# Keep track of information in result
-							this_to_str = str(vocab_option) + str(nlp_option) + NAMES[model] + str(combo)
+							this_to_str = str(vocab_option) + str(nlp_option) + model_names[model] + str(combo)
 							if this_to_str not in result.keys():
 								result[this_to_str] = [this_score] 
 							else:
