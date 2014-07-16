@@ -11,3 +11,5 @@ db
 model_creation/grid_search/old_pickles
 
 *.pkl
+
+model_creation/.ipynb_checkpoints
