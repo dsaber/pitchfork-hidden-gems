@@ -17,6 +17,7 @@ import cPickle
 import sqlalchemy
 import psycopg2
 
+
 def scale_score(x, from_scale_low=-1, from_scale_high=1, to_scale_low=0, to_scale_high=10):
 
 	if from_scale_low < 0:
