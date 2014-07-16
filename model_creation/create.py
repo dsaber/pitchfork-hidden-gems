@@ -10,26 +10,14 @@ sys.dont_write_bytecode = True
 # model building materials
 import nlp_processing as nlpp
 from sklearn.linear_model import LogisticRegression
+from map_scale import *
 
 # standard/storing
 import pandas as pd
+import numpy as np
 import cPickle
 import sqlalchemy
 import psycopg2
-
-
-def scale_score(x, from_scale_low=-1, from_scale_high=1, to_scale_low=0, to_scale_high=10):
-
-	if from_scale_low < 0:
-		temp = from_scale_low
-
-		x -= temp
-		from_scale_low -= temp
-		from_scale_high -= temp 
-
-	from_scale = (1.0 * x) / (from_scale_high - from_scale_low)
-	return (to_scale_high - to_scale_low) * from_scale
-
 
 if __name__ == '__main__':
 	
@@ -50,9 +38,6 @@ if __name__ == '__main__':
 	logreg = LogisticRegression(penalty='l2', C=100.0)
 	logreg.fit(train_transformed, label.values.ravel())
 
-	print 'pickling TF-IDF and Logistic Regression model...'
-	cPickle.dump((tfidf, logreg), open('tfidf_logreg.pkl', 'w'))
-
 	print 'preparing data for final export to CSV and SQL...'
 	mid['Mid?'] = 1 # label mid separately since these are the reviews
 					# we're interested in scoring and recommending
@@ -63,18 +48,34 @@ if __name__ == '__main__':
 	text_df = tfidf.transform(df['Content'])
 	df['MY_pos'] = logreg.predict_proba(text_df)[:, 1]
 
-	print 'scaling all sentiment analysis scores'
+	print 'scaling all sentiment analysis scores to 0-10 range...'
 	df['NLTK_score'] = df['NLTK_pos'].apply(lambda x: scale_score(x, 0, 1))
 	df['TB_score'] 	 = df['TB_pos'].apply(lambda x: scale_score(x, -1, 1))
 	df['MY_score'] 	 = df['MY_pos'].apply(lambda x: scale_score(x, 0, 1))
+
+	print 'reordering sentiment analysis scores to fit Pitchfork scoring distribution...'
+	score = df[['Score']].sort('Score').values
+
+	df = df.sort('NLTK_score')
+	df['NLTK_scaled'] = score.copy()
+	df = df.sort('TB_score')
+	df['TB_scaled'] = score.copy() 
+	df = df.sort('MY_score')
+	df['MY_scaled'] = score.copy()
+
+	print 'producing scoring map for Pitchfork score and condensed data representation for my score...'
+	p4k_scoring_map = produce_scoring_map(df, 'Score')
+	my_score_scale = produce_scoring_map(df, 'MY_score').values()
 
 	print 'saving data to csv -- this is our final copy...'
 	df.to_csv('data/final_p4k.csv', index=False)
 
 	print 'saving data to SQL -- this is going to form the foundation of our web app...'
 	engine = sqlalchemy.create_engine('postgresql://postgres:@localhost/pitchfork')
-	df.to_sql('review', engine)
+	df.to_sql('review', engine, if_exists='replace')
 
+	print 'pickling TF-IDF and Logistic Regression model...'
+	cPickle.dump((tfidf, logreg, p4k_scoring_map, my_score_scale), open('tfidf_logreg_maps.pkl', 'w'))
 
 
 

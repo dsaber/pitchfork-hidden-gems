@@ -14,13 +14,13 @@ import cPickle
 from sklearn.cluster import KMeans
 ```
 
-In[2]:
+In[57]:
 
 ```
-tfidf, logreg = cPickle.load(open('../tfidf_logreg.pkl', 'r'))
+tfidf, logreg, p4k_scoring_map, my_score_scale = cPickle.load(open('../tfidf_logreg_maps.pkl', 'r'))
 ```
 
-In[3]:
+In[60]:
 
 ```
 df = pd.read_csv('../data/final_p4k.csv')
@@ -35,7 +35,10 @@ columns_to_keep = [
     'Mid?',
     'NLTK_score',
     'TB_score',
-    'MY_score'
+    'MY_score',
+    'NLTK_scaled',
+    'TB_scaled',
+    'MY_scaled'
 ]
 df = df[columns_to_keep]
 df = df.dropna()
@@ -47,58 +50,7 @@ df.head()
 
 
 
-In[4]:
-
-```
-# compute amount by which albums are 'underrated' according 
-# to various sentiment analysis techniques
-
-# (1) The following code rearranges score by all values
-score = df[['Score']].sort('Score').values
-
-df = df.sort('NLTK_score')
-df['NLTK_scaled'] = score.copy()
-df['NLTK_under'] = df['NLTK_scaled'] - df['Score']
-
-df = df.sort('TB_score')
-df['TB_scaled'] = score.copy()
-df['TB_under'] = df['TB_scaled'] - df['Score']
-
-df = df.sort('MY_score')
-df['MY_scaled'] = score.copy()
-df['MY_under'] = df['MY_scaled'] - df['Score']
-```
-
-In[5]:
-
-```
-# # (2) The following code rearranges score by 'Mid' values only
-# from scipy.stats import percentileofscore
-
-# score_dict = {}
-# for x in xrange(0, 101):
-#     score_dict[x] = np.percentile(df['Score'], x)
-
-# def map_to_p4k_score(x, col):
-#     p = int(percentileofscore(df[col], x))
-#     return score_dict[p]
-
-# df['MY_scaled'] = df['MY_score'].apply(lambda x: map_to_p4k_score(x, 'MY_score'))
-# df['NLTK_scaled'] = df['NLTK_score'].apply(lambda x: map_to_p4k_score(x, 'NLTK_score'))
-```
-
-In[6]:
-
-```
-df.head()
-```
-
-
-
-
-
-
-In[7]:
+In[61]:
 
 ```
 # we're going to want to cluster by reviwer to avoid 
@@ -141,7 +93,7 @@ print df['Reviewer'].value_counts()
     Length: 314, dtype: int64
 
 
-In[8]:
+In[62]:
 
 ```
 print df['Genre'].value_counts()
@@ -182,7 +134,7 @@ print df['Genre'].value_counts()
     Length: 331, dtype: int64
 
 
-In[40]:
+In[67]:
 
 ```
 df_sub = df[df['Reviewer'] == 'Joe Tangari']
@@ -190,10 +142,10 @@ print df_sub.shape
 ```
 
 
-    (813, 17)
+    (813, 14)
 
 
-In[41]:
+In[68]:
 
 ```
 joe = tfidf.transform(df_sub['Content'])
