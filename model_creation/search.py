@@ -78,7 +78,6 @@ def main(scoring_func=metrics.roc_auc_score, file_path='data/final_p4k.csv'):
 	# PRODUCE_VOCAB, NLP_PARAMS, and MODELS
 	for n, p in zip(neg_kf, pos_kf):
 		print 'New Fold'
-		print vocab_options
 		
 		# create training and test sets for this fold
 		neg_train_index 	= n[0]
