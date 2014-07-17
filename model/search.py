@@ -158,5 +158,5 @@ def main(scoring_func=metrics.roc_auc_score, file_path='data/final_p4k.csv',
 
 if __name__ == '__main__':
 	result = main() 
-	cPickle.dump(result, open('model_creation/grid_search/grid_search_complete.pkl', 'w'))
+	cPickle.dump(result, open('model/grid_search/grid_search_complete.pkl', 'w'))
 
