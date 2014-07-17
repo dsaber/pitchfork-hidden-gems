@@ -15,6 +15,9 @@ import cPickle
 # predict logic
 import model.predict as mp
 
+# standard
+import numpy as np
+
 
 app = Flask(__name__)
 
@@ -23,6 +26,19 @@ def home_page():
 	return render_template('layout.html')
 
 # recommender logic
+@app.route('/recommend/')
+def recommend():
+	to_ex = '''
+				SELECT "Album", "Artist", "Artwork", "Link"
+				FROM "review" r
+				WHERE r."BNM" = 1;
+			'''
+	cur.execute(to_ex)
+	bnm_recs = cur.fetchall()
+	np.random.shuffle(bnm_recs)
+	random_recs = bnm_recs[:5]
+
+	return str(random_recs)
 
 
 
