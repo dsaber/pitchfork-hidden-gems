@@ -1,21 +1,22 @@
 body { 
-	font-family: Calibri, sans-serif;
+	font-family: Avenir, sans-serif;
 }
 
 #nav_bar { 
 	background-color: #2F4F4F;
 	padding-top: 10px;
 	padding-bottom: 10px;
-	margin-bottom: 20px;
+	margin-bottom: 10px;
+	font-size: 1.1em;
 }
 
 #nav_bar a:link, a:visited, a:active { 
 	color:	#FFFAF0;
-	text-decoration: underline;
+	text-decoration: none;
 }
 
 #nav_bar a:hover { 
-	text-decoration: none;
+	text-decoration: underline;
 }
 
 #recommend { 
