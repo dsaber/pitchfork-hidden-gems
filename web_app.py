@@ -3,7 +3,7 @@ import sys
 sys.dont_write_bytecode = True
 
 # web things
-from flask import Flask
+from flask import Flask, render_template
 
 # data/database
 import psycopg2
@@ -19,6 +19,16 @@ app = Flask(__name__)
 @app.route('/')
 def home_page():
 	return '<h1>Hello!</h1>'
+
+# predicting and scoring logic
+@app.route('/predict/')
+def predict():
+	return render_template('predict.html')
+
+@app.route('/predict/show_score/<review_text>')
+def show_score():
+	pass 
+
 
 
 if __name__ == '__main__':
