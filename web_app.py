@@ -22,6 +22,9 @@ app = Flask(__name__)
 def home_page():
 	return '<h1>Hello!</h1>'
 
+# recommender logic
+
+
 
 # predicting and scoring logic
 @app.route('/predict/')
