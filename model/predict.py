@@ -13,7 +13,7 @@ def predict_one(review_text, tfidf, logreg, scale, scoring_map, default_scale=de
 	if len(review_text) > 1000: 
 		transformed_review_text = tfidf.transform([review_text])
 		raw_log_prob = logreg.predict_proba(transformed_review_text)[:, 1][0]
-		return raw_log_prob, ms.map_to_scoring_map(raw_log_prob, scale, scoring_map)
+		return raw_log_prob, ms.map_to_scoring_map((10*raw_log_prob), scale, scoring_map)
 	else:
 		# defaulting to TextBlob scoring
 		raw_tblob_score = TextBlob(review_text).sentiment.polarity
