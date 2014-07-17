@@ -3,7 +3,9 @@ import sys
 sys.dont_write_bytecode = True
 
 # web things
-from flask import Flask, render_template
+from flask import Flask
+from flask import render_template
+from flask import request
 
 # data/database
 import psycopg2
@@ -11,7 +13,7 @@ import pandas as pd
 import cPickle
 
 # predict logic
-import model.predict as predict
+import model.predict as mp
 
 
 app = Flask(__name__)
@@ -20,14 +22,17 @@ app = Flask(__name__)
 def home_page():
 	return '<h1>Hello!</h1>'
 
+
 # predicting and scoring logic
 @app.route('/predict/')
 def predict():
 	return render_template('predict.html')
 
-@app.route('/predict/show_score/<review_text>')
-def show_score():
-	pass 
+@app.route('/predict/score', methods=[ 'POST' ])
+def score():
+	text = request.form['review_text']
+	log_prob, imputed_score = mp.predict_one(text, tfidf, logreg, scoring_scale, p4k_scoring_map)
+	return str(imputed_score) 
 
 
 
