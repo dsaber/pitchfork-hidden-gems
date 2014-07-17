@@ -14,13 +14,13 @@ import cPickle
 from sklearn.cluster import KMeans
 ```
 
-In[57]:
+In[2]:
 
 ```
 tfidf, logreg, p4k_scoring_map, my_score_scale = cPickle.load(open('../tfidf_logreg_maps.pkl', 'r'))
 ```
 
-In[60]:
+In[3]:
 
 ```
 df = pd.read_csv('../data/final_p4k.csv')
@@ -48,6 +48,101 @@ df.head()
 
 
 
+
+
+In[30]:
+
+```
+# Answering the question... Are we simply reordering reviews based on reviewer? 
+# Thankfully, the answer is usually no (the outliers - defined as absolute difference of 0.3 or greater - 
+# among reviewers with more than 100 reviews include Adam Moerder, Andy Beta, David Raposa, 
+# Grayson Currin, Ian Cohen, Paul Thompson, and Zach Kelly (out of 46 such reviewers)
+
+# Interestingly, nearly all of these reviewers write about Metal music. Perhaps Grayson Currin's
+# writing simply formed the majority of the foundation for what constituted a 'positive' metal 
+# review in my model. 
+
+df_reviewer = df[['Score', 'MY_scaled']].groupby(df['Reviewer']).mean()
+df_reviewer['Diff'] = np.round(np.abs(df_reviewer['Score'] - df_reviewer['MY_scaled']), 3)
+df_reviewer['Counts'] = df['Album'].groupby(df['Reviewer']).count()
+df_important = df_reviewer[df_reviewer['Counts'] > 100]
+df_important
+```
+
+
+
+
+
+
+In[6]:
+
+```
+# a check to ensure my scaling concept works consistently
+from map_scale import *
+df['MY_scaled2'] = df['MY_score'].apply(lambda x: map_to_scoring_map(x, my_score_scale, p4k_scoring_map))
+```
+
+In[10]:
+
+```
+print map_to_scoring_map(9.9, my_score_scale, p4k_scoring_map)
+print df[['MY_scaled', 'MY_scaled2']].ix[1000:1050, :]
+```
+
+
+    8.5
+          MY_scaled  MY_scaled2
+    1000        4.7     4.70000
+    1001        4.7     4.70000
+    1002        4.7     4.70000
+    1003        4.7     4.70000
+    1004        4.7     4.70000
+    1005        4.7     4.70000
+    1006        4.7     4.70000
+    1007        4.7     4.70000
+    1008        4.7     4.70000
+    1009        4.7     4.70000
+    1010        4.7     4.70000
+    1011        4.7     4.70000
+    1012        4.7     4.70000
+    1013        4.7     4.70000
+    1014        4.7     4.70000
+    1015        4.7     4.70116
+    1016        4.7     4.70116
+    1017        4.8     4.80000
+    1018        4.8     4.80000
+    1019        4.8     4.80000
+    1020        4.8     4.80000
+    1021        4.8     4.80000
+    1022        4.8     4.80000
+    1023        4.8     4.80000
+    1024        4.8     4.80000
+    1025        4.8     4.80000
+    1026        4.8     4.80000
+    1027        4.8     4.80000
+    1028        4.8     4.80000
+    1029        4.8     4.80000
+    1030        4.8     4.80000
+    1031        4.8     4.80000
+    1032        4.8     4.80000
+    1033        4.8     4.80000
+    1034        4.8     4.80000
+    1035        4.8     4.80000
+    1036        4.8     4.80000
+    1037        4.8     4.80000
+    1038        4.8     4.80000
+    1039        4.8     4.80000
+    1040        4.8     4.80000
+    1041        4.8     4.80000
+    1042        4.8     4.80000
+    1043        4.8     4.80000
+    1044        4.8     4.80000
+    1045        4.8     4.80000
+    1046        4.8     4.80000
+    1047        4.8     4.80000
+    1048        4.8     4.80000
+    1049        4.8     4.80000
+    1050        4.8     4.80000
 
 
 In[61]:
