@@ -65,7 +65,7 @@ def similar(artist_name):
 	cur.execute(get_most_underrated_artists)
 	underrated = cur.fetchall()
 
-	return str(underrated)
+	return render_template('choices.html', underrated=underrated[:5])
 
 
 # predicting and scoring logic
@@ -77,7 +77,7 @@ def predict():
 def score():
 	text = request.form['review_text']
 	log_prob, imputed_score = mp.predict_one(text, tfidf, logreg, scoring_scale, p4k_scoring_map)
-	return str(imputed_score) 
+	return str(imputed_score)
 
 
 

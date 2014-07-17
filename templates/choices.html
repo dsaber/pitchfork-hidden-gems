@@ -1,0 +1,15 @@
+{% extends 'layout.html' %}
+{% block body %}
+	<p>
+		Select one of the albums below and we'll find similar albums you might have missed
+	</p>
+	<hr>
+	{% for album in underrated %}
+		<span class='album'>
+			<img src={{ album[2] }} width='200' height='200'>
+		</a>
+		<p>p4k Score: {{ album[4] }}</p>
+		<p>My Score: {{ album[5] }}<p>
+		</span>
+	{% endfor %}
+{% endblock %}
