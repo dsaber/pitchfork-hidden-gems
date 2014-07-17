@@ -29,3 +29,8 @@ body {
 	float: right;
 	margin-right: 10px;
 }
+
+.album { 
+	margin-left: auto;
+	margin-right: auto;
+}

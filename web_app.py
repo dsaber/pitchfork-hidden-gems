@@ -6,6 +6,9 @@ sys.dont_write_bytecode = True
 from flask import Flask
 from flask import render_template
 from flask import request
+from flask import escape
+
+import urllib2
 
 # data/database
 import psycopg2
@@ -28,6 +31,8 @@ def home_page():
 # recommender logic
 @app.route('/recommend/')
 def recommend():
+	# pick random albums that have a 'Best New Music' tag
+	# so that the user can select one
 	to_ex = '''
 				SELECT "Album", "Artist", "Artwork", "Link"
 				FROM "review" r
@@ -38,8 +43,29 @@ def recommend():
 	np.random.shuffle(bnm_recs)
 	random_recs = bnm_recs[:5]
 
-	return str(random_recs)
+	return render_template('recommend.html', albums=random_recs, ulib=urllib2.quote)
 
+@app.route('/similar/<artist_name>')
+def similar(artist_name):
+	# going to suggest most underrated albums depending on the 
+	# genre the user expresses interest in
+	get_genre = '''
+					SELECT r."Genre"
+					FROM "review" r
+					WHERE r."Artist" = \'''' + str(artist_name) + "';"
+	cur.execute(get_genre)
+	genre = cur.fetchone()[0]
+	
+	get_most_underrated_artists = '''
+		SELECT "Album", "Artist", "Artwork", "Link", "Score", "MY_scaled"
+		FROM "review" r
+		WHERE r."Mid?" = 1 AND r."MY_scaled" - r."Score" > 0 AND
+		r."Genre" = \'''' + str(genre) + '''\'
+		ORDER BY r."MY_scaled" - r."Score" DESC;'''
+	cur.execute(get_most_underrated_artists)
+	underrated = cur.fetchall()
+
+	return str(underrated)
 
 
 # predicting and scoring logic
