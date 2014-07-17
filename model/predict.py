@@ -17,4 +17,4 @@ def predict_one(review_text, tfidf, logreg, scale, scoring_map, default_scale=de
 	else:
 		# defaulting to TextBlob scoring
 		raw_tblob_score = TextBlob(review_text).sentiment.polarity
-		return raw_tblob_score, ms.map_to_scoring_map(raw_tblob_score, default_scale, scoring_map)
+		return raw_tblob_score, ms.scale_score(raw_tblob_score)
