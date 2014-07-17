@@ -1,16 +1,8 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<title>
-			Pitchfork's Hidden Gems
-		</title>
-	</head>
-	<body>
-		<form action='score' method='post' id='predict'>
-			<textarea form='predict' rows='25' cols='50' name='review_text'>
-			</textarea>
-			<br>
-			<input type='submit' value='Submit'>
-		</form>
-	</body>
-</html>
+{% extends 'layout.html' %}
+{% block body %}
+	<form action='score' method='post' id='pred_score'>
+		<textarea form='pred_score' rows='25' cols='50' name='review_text'></textarea>
+		<br>
+		<input type='submit' value='Submit'>
+	</form>
+{% endblock %}

@@ -20,7 +20,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def home_page():
-	return '<h1>Hello!</h1>'
+	return render_template('layout.html')
 
 # recommender logic
 
@@ -31,7 +31,7 @@ def home_page():
 def predict():
 	return render_template('predict.html')
 
-@app.route('/predict/score', methods=[ 'POST' ])
+@app.route('/predict/score', methods=[ 'GET', 'POST' ])
 def score():
 	text = request.form['review_text']
 	log_prob, imputed_score = mp.predict_one(text, tfidf, logreg, scoring_scale, p4k_scoring_map)

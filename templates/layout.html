@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>
+			Pitchfork's Hidden Gems
+		</title>
+		<link rel='stylesheet' type='text/css' href="{{url_for('static', filename='style.css') }}">
+	</head>
+	<body>
+		<div id='nav_bar'>
+			<span id='recommend'><a href='#'>Recommend</a></span>
+			<span id='predict'><a href='http://127.0.0.1:5000/predict'>Predict</a></span>
+		</div>
+		{% block body %}{% endblock %}
+	</body>
+</html>
