@@ -8,8 +8,8 @@ data
 
 db
 
-model_creation/grid_search/old_pickles
+model/grid_search/old_pickles
 
 *.pkl
 
-model_creation/.ipynb_checkpoints
+model/.ipynb_checkpoints/
