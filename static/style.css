@@ -36,7 +36,7 @@ body {
 }
 dl.column { 
 	position: relative;
-	min-height: 375px;
+	min-height: 400px;
 }
 .column dd { 
 	width: 50%;
@@ -44,12 +44,12 @@ dl.column {
 .score_comp dd.hg { 
 	font-size: .8em;
 	position: absolute;
-	bottom: 0;
+	bottom: 30px;
 }
 .score_comp dd.p4k { 
 	font-size: .8em;
 	position: absolute;
-	bottom: 20px;
+	bottom: 50px;
 }
 
 
@@ -107,16 +107,20 @@ div.index_style {
 	margin-right: 50px;
 	padding: 3px 10px;
 	background-color: #2F4F4F;
-	color: #FFFAF0;
 	border-radius: 25px;
 }
 .button a { 
 	text-decoration: none;
+	color: #FFFAF0;
 }
 .button a:hover { 
 	text-decoration: underline;
 }
 
+.button.back { 
+	float: left;
+	margin-left: 25px;
+}
 
 
 

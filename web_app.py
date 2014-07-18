@@ -45,8 +45,8 @@ def recommend():
 
 	return render_template('recommend.html', albums=random_recs, ulib=urllib2.quote)
 
-@app.route('/similar/<artist_name>')
-def similar(artist_name):
+@app.route('/similar/<artist_name>/<page>')
+def similar(artist_name, page=0):
 	# going to suggest most underrated albums depending on the 
 	# genre the user expresses interest in
 	get_genre = '''
@@ -65,7 +65,14 @@ def similar(artist_name):
 	cur.execute(get_most_underrated_artists)
 	underrated = cur.fetchall()
 
-	return render_template('choices.html', underrated=underrated[:5])
+	begin = 5 * int(page)
+	end = begin + 5
+	underrated = underrated[begin:end]
+
+	begin_page = str(int(page) - 1)
+	end_page   = str(int(page) + 1)
+
+	return render_template('choices.html', underrated=underrated, artist_name=artist_name, begin_page=begin_page, end_page=end_page, ulib=urllib2.quote, int=int)
 
 
 # predicting and scoring logic

@@ -22,4 +22,8 @@
 		</span>
 		</dl>
 	{% endfor %}
+	{% if int(begin_page) >= 0 %}
+		<span class='button back'><a href={{ '/similar/' + ulib(artist_name) + '/' + begin_page }}>Back</a></span>
+	{% endif %}
+	<span class='button'><a href={{ '/similar/' + ulib(artist_name) + '/' + end_page }}>More</a></span>
 {% endblock %}

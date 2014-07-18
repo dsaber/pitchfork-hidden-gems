@@ -7,7 +7,7 @@
 	{% for album in albums %}
 		<dl class='column'>
 			<dt>
-				<a href={{ '/similar/' + ulib(album[1]) }}>
+				<a href={{ '/similar/' + ulib(album[1]) + '/0' }}>
 					<img src={{ album[2] }} width='200' height='200'>
 				</a>
 			</dt>
@@ -19,5 +19,5 @@
 			</dd>
 		</dl>
 	{% endfor %}
-	<span class='button'><a href='/'>Reload</a></span>
+	<span class='button'><a href='./'>Reload</a></span>
 {% endblock %}
