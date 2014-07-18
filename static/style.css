@@ -34,3 +34,28 @@ body {
 	margin-left: auto;
 	margin-right: auto;
 }
+
+
+
+.column { 
+	float: left;
+	width: 20%;
+}
+
+.column dt { 
+	float: left;
+	clear: left;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

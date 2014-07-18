@@ -5,11 +5,18 @@
 	</p>
 	<hr>
 	{% for album in albums %}
-		<span class='album' style='width:200px height:300px;'>
-		<a href={{ '/similar/' + ulib(album[1]) }}>
-			<img src={{ album[2] }} width='200' height='200'>
-		</a>
-		<em>{{ album[0] }}</em> by {{ album[1] }}
-		</span>
+		<dl class='column'>
+			<dt>
+				<a href={{ '/similar/' + ulib(album[1]) }}>
+					<img src={{ album[2] }} width='200' height='200'>
+				</a>
+			</dt>
+			<dd>
+				<em>{{ album[0] }}</em> 
+			</dd>
+			<dd>
+				by {{ album[1] }}
+			</dd>
+		</dl>
 	{% endfor %}
 {% endblock %}
