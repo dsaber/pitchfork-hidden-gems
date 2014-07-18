@@ -9,15 +9,17 @@
 		<dt>
 			<img src={{ album[2] }} width='200' height='200'>
 		</dt>
-		<dd>
+		<dd align='center'>
 			<em>{{ album[0] }}</em> 
 		</dd>
-		<dd>
+		<dd align='center'>
 			by {{ album[1] }}
 		</dd>
 		<dd>&nbsp;</dd>
-		<dd>p4k score: {{ album[4] }}</dd>
-		<dd> hg score:&nbsp;&nbsp; {{ album[5] }}</dd>
+		<span class='score_comp'>
+			<dd class='p4k' align='center'>p4k score: {{ album[4] }}</dd>
+			<dd class='hg' align='center'>hg score: {{ album[5] }}</dd>
+		</span>
 		</dl>
 	{% endfor %}
 {% endblock %}

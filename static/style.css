@@ -34,6 +34,25 @@ body {
 	float: left;
 	width: 20%;
 }
+dl.column { 
+	position: relative;
+	min-height: 350px;
+}
+.column dd { 
+	width: 50%;
+}
+.score_comp dd.hg { 
+	font-size: .8em;
+	position: absolute;
+	bottom: 0;
+}
+.score_comp dd.p4k { 
+	font-size: .8em;
+	position: absolute;
+	bottom: 20px;
+}
+
+
 
 #index { 
 	background-image: url('chagall.jpg');
