@@ -124,6 +124,17 @@ div.index_style {
 
 
 
-
+#pred_score { 
+	display: inline;
+}
+#score { 
+	position: absolute;
+	font-size: 1.5em;
+	top: 225px;
+	margin-left: 100px;
+	padding: 5px;
+	border: solid;
+	border-radius: 25px;
+}
 
 
