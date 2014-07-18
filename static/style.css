@@ -30,21 +30,33 @@ body {
 	margin-right: 10px;
 }
 
-.album { 
-	margin-left: auto;
-	margin-right: auto;
-}
-
-
-
 .column { 
 	float: left;
 	width: 20%;
 }
 
-.column dt { 
-	float: left;
-	clear: left;
+#index { 
+	background-image: url('chagall.jpg');
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+a.index_style { 
+	color: #2F4F4F;
+	text-decoration: none;
+}
+
+a:hover.index_style {
+	text-decoration: underline;
+}
+
+div.index_style { 
+	background-color: #FFFAF0;
+	opacity: .8;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	margin-bottom: 10px;
+	font-size: 1.1em;
 }
 
 

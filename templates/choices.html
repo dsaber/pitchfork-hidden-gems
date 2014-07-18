@@ -5,11 +5,19 @@
 	</p>
 	<hr>
 	{% for album in underrated %}
-		<span class='album'>
+		<dl class='column'>
+		<dt>
 			<img src={{ album[2] }} width='200' height='200'>
-		</a>
-		<p>p4k Score: {{ album[4] }}</p>
-		<p>My Score: {{ album[5] }}<p>
-		</span>
+		</dt>
+		<dd>
+			<em>{{ album[0] }}</em> 
+		</dd>
+		<dd>
+			by {{ album[1] }}
+		</dd>
+		<dd>&nbsp;</dd>
+		<dd>p4k score: {{ album[4] }}</dd>
+		<dd> hg score:&nbsp;&nbsp; {{ album[5] }}</dd>
+		</dl>
 	{% endfor %}
 {% endblock %}
