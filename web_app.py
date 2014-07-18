@@ -86,12 +86,6 @@ def predict():
 
 	return render_template('predict.html', score=imputed_score)
 
-# @app.route('/predict/score', methods=[ 'GET', 'POST' ])
-# def score():
-# 	text = request.form['review_text']
-# 	log_prob, imputed_score = mp.predict_one(text, tfidf, logreg, scoring_scale, p4k_scoring_map)
-# 	return str(imputed_score)
-
 
 
 if __name__ == '__main__':
