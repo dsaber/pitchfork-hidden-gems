@@ -60,8 +60,27 @@ div.index_style {
 }
 
 
+#description { 
+	margin-top: 10px;
+	float: right;
+	width: 300px;
+	background-color: #FFFAF0;
+	opacity: .8;
+	color: #2F4F4F;
+}
 
+#description a { 
+	color: #2F4F4F;
+	text-decoration: underline;
+}
 
+#sig, #description p {
+	padding: 5px;
+}
+
+#sig { 
+	float: right;
+}
 
 
 
