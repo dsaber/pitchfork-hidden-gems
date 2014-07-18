@@ -4,9 +4,11 @@
 		Input review here and find its imputed Pitchfork rating...
 		<br>
 		<textarea form='pred_score' rows='25' cols='54' name='review_text'></textarea>
-		<span id='score'>
-			{{ score }}
-		</span>
+		{% if score != '' %}
+			<span id='score'>
+				{{ score }}
+			</span>
+		{% endif %}
 		<br>
 		<input type='submit' value='Submit'>
 	</form>
