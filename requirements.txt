@@ -4,7 +4,6 @@ Jinja2==2.7.2
 Pygments==1.6
 SQLAlchemy==0.9.2
 Sphinx==1.2.1
-VTK==5.10.1
 Werkzeug==0.9.4
 XlsxWriter==0.5.2
 apptools==4.2.1
