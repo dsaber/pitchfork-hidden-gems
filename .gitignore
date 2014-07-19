@@ -6,10 +6,8 @@ _variables.py
 
 data
 
-db
-
 model/grid_search/old_pickles
 
-*.pkl
-
 model/.ipynb_checkpoints/
+
+tfidf_logreg_maps_true.pkl
