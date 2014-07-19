@@ -12,7 +12,6 @@ astropy==0.3
 atom==0.3.7
 backports.ssl-match-hostname==3.4.0.2
 beautifulsoup4==4.3.1
-binstar==0.4.4
 biopython==1.63
 bitarray==0.8.1
 blaze==0.4.2
