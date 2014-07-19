@@ -18,9 +18,6 @@ bokeh==0.4.1
 boto==2.24.0
 decorator==3.4.0
 docutils==0.11
-enable==4.3.0
-enaml==0.9.1
-envisage==4.4.0
 future==0.11.2
 gensim==0.10.0
 gevent==1.0
