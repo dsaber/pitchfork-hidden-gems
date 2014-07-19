@@ -3,7 +3,6 @@ Flask==0.10.1
 GraphLab-Create==0.3.0
 Jinja2==2.7.2
 MarkupSafe==0.18
-PyAudio==0.2.7
 PySAL==1.6.0
 PyYAML==3.11
 Pygments==1.6
