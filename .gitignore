@@ -9,3 +9,5 @@ data
 model/grid_search/old_pickles
 
 model/.ipynb_checkpoints/
+
+*.pkl

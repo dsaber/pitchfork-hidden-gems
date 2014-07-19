@@ -12,6 +12,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 
 from nltk.tokenize import wordpunct_tokenize
 from nltk.stem import WordNetLemmatizer
+from nltk.tag import pos_tag
 
 # to incorporate Lemmatization (unless Lemmatization gives you a large
 # performance boost, I would avoid it -- the NLTK library takes a long, long,
@@ -21,6 +22,18 @@ class LemmaTokenizer(object):
 		self.wnl = WordNetLemmatizer()
 	def __call__(self, doc):
 		return [self.wnl.lemmatize(t) for t in wordpunct_tokenize(doc)]
+
+# to incorporate P.O.S. tagging (again, quite slow)
+class POSTokenizer(object):
+	def __init__(self):
+		self.pt = pos_tag
+		self.i  = 0 # keep track of iterations
+	def __call__(self, doc):
+		print self.i
+		self.i += 1
+		for t in pos_tag(wordpunct_tokenize(doc)):
+			return t[0] + t[1]
+		return 'the'
 
 
 def produce_sentiment_data(in_df, neg_thresh=6.0, pos_thresh=8.0, reviewer='All', genre='All'):
