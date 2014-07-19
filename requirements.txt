@@ -2,7 +2,6 @@ Cython==0.20.1
 Flask==0.10.1
 GraphLab-Create==0.3.0
 Jinja2==2.7.2
-MDP==3.3
 MarkupSafe==0.18
 PIL==1.1.7
 PyAudio==0.2.7
