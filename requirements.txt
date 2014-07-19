@@ -31,4 +31,3 @@ numpy==1.8.0
 pandas==0.14.1
 psycopg2==2.5.1
 requests==2.3.0
-statsmodels==0.5.0
