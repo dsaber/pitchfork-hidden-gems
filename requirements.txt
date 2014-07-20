@@ -1,11 +1,7 @@
-Cython
 Flask
 Jinja2
-MarkupSafe
 SQLAlchemy
-Sphinx
 Werkzeug
-XlsxWriter
 backports.ssl-match-hostname
 beautifulsoup4
 bokeh
