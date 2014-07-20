@@ -7,11 +7,6 @@ beautifulsoup4
 bokeh
 boto
 conda
-conda-build
-decorator
-docutils
-gensim
-gevent
 gevent-websocket
 gevent-zeromq
 gunicorn
