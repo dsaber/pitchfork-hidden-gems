@@ -12,7 +12,6 @@ gevent-zeromq
 gunicorn
 httplib2
 nltk
-numpy
 oauth2
 pandas
 psycopg2
