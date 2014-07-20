@@ -10,4 +10,4 @@ model/grid_search/old_pickles
 
 model/.ipynb_checkpoints/
 
-*.pkl
+tfidf_logreg_maps_true.pkl

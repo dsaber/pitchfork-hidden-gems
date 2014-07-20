@@ -31,9 +31,7 @@ class POSTokenizer(object):
 	def __call__(self, doc):
 		print self.i
 		self.i += 1
-		for t in pos_tag(wordpunct_tokenize(doc)):
-			return t[0] + t[1]
-		return 'the'
+		return [t[0] + t[1] for t in self.pt(wordpunct_tokenize(doc))]
 
 
 def produce_sentiment_data(in_df, neg_thresh=6.0, pos_thresh=8.0, reviewer='All', genre='All'):

@@ -31,7 +31,7 @@ if __name__ == '__main__':
 	label = pd.concat([neg_label, pos_label])
 
 	print 'building TF-IDF...'
-	tfidf = nlpp.build_cv_or_tfidf(neg, pos, 'TFIDF', { 'ngram_range': (1, 3), 'min_df': 9 }, None)
+	tfidf = nlpp.build_cv_or_tfidf(neg['Content'], pos['Content'], 'TFIDF', { 'ngram_range': (1, 3), 'min_df': 9 }, None)
 	train_transformed = tfidf.fit_transform(train['Content'])
 
 	print 'training Logistic Regression...'
