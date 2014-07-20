@@ -6,7 +6,6 @@ backports.ssl-match-hostname
 beautifulsoup4
 bokeh
 boto
-casuarius
 conda
 conda-build
 decorator
