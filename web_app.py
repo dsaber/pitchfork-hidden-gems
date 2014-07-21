@@ -95,5 +95,5 @@ if __name__ == '__main__':
 
 	tfidf, logreg, p4k_scoring_map, scoring_scale = cPickle.load(open('tfidf_logreg_maps.pkl', 'r'))
 
-	app.run(host='0.0.0.0')
+	app.run()
 
