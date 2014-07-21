@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 {% block body %}
 	<p>
-		Select one of the albums below and we'll find similar albums you might have missed
+		Select one of the highly-rated albums below and we'll find similar albums you might have missed
 	</p>
 	<hr>
 	{% for album in albums %}
@@ -19,5 +19,6 @@
 			</dd>
 		</dl>
 	{% endfor %}
+	<br>
 	<span class='button'><a href='./'>Reload</a></span>
 {% endblock %}

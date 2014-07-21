@@ -1,13 +1,16 @@
 {% extends 'layout.html' %}
 {% block body %}
 	<p>
-		These are albums you might enjoy
+		Click on an album below to listen
 	</p>
 	<hr>
+	<div class='container'>
 	{% for album in underrated %}
 		<dl class='column'>
 		<dt>
-			<img src={{ album[2] }} width='200' height='200'>
+			<a href={{ '/listen/' + ulib(album[1]) + '/' + ulib(album[0]) }}>
+				<img src={{ album[2] }} width='200' height='200'>
+			</a>
 		</dt>
 		<dd align='center'>
 			<em>{{ album[0] }}</em> 
@@ -22,6 +25,8 @@
 		</span>
 		</dl>
 	{% endfor %}
+	</div>
+	<br>
 	{% if int(begin_page) >= 0 %}
 		<span class='button back'><a href={{ '/similar/' + ulib(artist_name) + '/' + begin_page }}>Back</a></span>
 	{% endif %}

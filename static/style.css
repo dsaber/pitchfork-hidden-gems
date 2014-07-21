@@ -1,5 +1,6 @@
 body { 
 	font-family: Avenir, sans-serif;
+	background-color: #FFFAF0;
 }
 
 #nav_bar { 
@@ -103,6 +104,7 @@ div.index_style {
 
 
 .button { 
+	display: block;
 	float: right;
 	margin-right: 50px;
 	padding: 3px 10px;
@@ -118,6 +120,7 @@ div.index_style {
 }
 
 .button.back { 
+	display: block;
 	float: left;
 	margin-left: 25px;
 }
@@ -135,6 +138,11 @@ div.index_style {
 	padding: 5px;
 	border: solid;
 	border-radius: 25px;
+}
+
+.container { 
+	width: 100%;
+	min-height: 400px;
 }
 
 

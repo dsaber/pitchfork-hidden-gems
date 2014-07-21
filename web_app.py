@@ -74,6 +74,20 @@ def similar(artist_name, page=0):
 
 	return render_template('choices.html', underrated=underrated, artist_name=artist_name, begin_page=begin_page, end_page=end_page, ulib=urllib2.quote, int=int)
 
+@app.route('/listen/<artist_name>/<album_name>')
+def listen(artist_name, album_name):
+	url = 'http://www.rdio.com/api/oembed/?url=http://www.rdio.com/artist/'
+	url += urllib2.quote(artist_name) + '/album/'
+	url += urllib2.quote(album_name)
+
+	r = requests.get(url)
+	if r.status_code == 200:
+		listen_obj = json.loads(r.text)
+	else:
+		listen_obj = {}
+		listen_obj['html'] = 'Sorry, streaming is not available for this album'
+	return (render_template('listen.html') + str(listen_obj['html']))
+	
 
 # predicting and scoring logic
 @app.route('/predict/', methods=[ 'GET', 'POST' ])
