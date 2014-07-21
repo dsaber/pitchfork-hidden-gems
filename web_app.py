@@ -90,7 +90,7 @@ def predict():
 
 if __name__ == '__main__':
 
-	conn = psycopg2.connect(dbname='pitchfork', user='postgres', host='/tmp/')
+	conn = psycopg2.connect(dbname='d3hohnj2pptghg', user='miypbfxztnggxg', host='ec2-54-197-241-64.compute-1.amazonaws.com')
 	cur = conn.cursor()
 
 	tfidf, logreg, p4k_scoring_map, scoring_scale = cPickle.load(open('tfidf_logreg_maps.pkl', 'r'))
