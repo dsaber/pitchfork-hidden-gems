@@ -23,6 +23,8 @@ if __name__ == '__main__':
 	
 	print 'reading data in and splitting into training and test sets...'
 	df = pd.read_csv('data/final_p4k_pre_classifier.csv')
+	save_content = df['Content'].copy()
+	df['Content'] = df.apply(lambda x: nlpp.remove(x['Artist'], x['Content']), axis=1)
 	mid, neg, pos = nlpp.produce_sentiment_data(df)
 
 	neg_label = pd.DataFrame([0] * neg.shape[0])
@@ -32,6 +34,7 @@ if __name__ == '__main__':
 
 	print 'building TF-IDF...'
 	tfidf = nlpp.build_cv_or_tfidf(neg['Content'], pos['Content'], 'TFIDF', { 'ngram_range': (1, 3), 'min_df': 9 }, None)
+	df['Content'] = save_content
 	train_transformed = tfidf.fit_transform(train['Content'])
 
 	print 'training Logistic Regression...'

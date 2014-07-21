@@ -61,7 +61,7 @@ def similar(artist_name, page=0):
 	get_most_underrated_artists = '''
 		SELECT "Album", "Artist", "Artwork", "Link", "Score", "MY_scaled"
 		FROM "review" r
-		WHERE r."Mid?" = 1 AND r."MY_scaled" - r."Score" > 0 AND
+		WHERE r."Mid?" = 1 AND r."MY_score" > .9 AND
 		r."Genre" = \'''' + str(genre) + '''\'
 		ORDER BY r."MY_scaled" - r."Score" DESC, r."Score";'''
 	cur.execute(get_most_underrated_artists)

@@ -14,6 +14,8 @@ from nltk.tokenize import wordpunct_tokenize
 from nltk.stem import WordNetLemmatizer
 from nltk.tag import pos_tag
 
+import re
+
 # to incorporate Lemmatization (unless Lemmatization gives you a large
 # performance boost, I would avoid it -- the NLTK library takes a long, long,
 # long time)
@@ -101,4 +103,17 @@ def build_cv_or_tfidf(in_neg_df, in_pos_df, cv_or_tfidf='CV', nlp_params={}, inf
 		cv_or_tf = TfidfVectorizer(**nlp_params)
 
 	return cv_or_tf
+
+# to remove artists from their own reviews
+def remove_artist_from_content(artist, content):
+
+	return re.sub(artist, r'', content)
+
+def remove(artist, content):
+	try:
+		return remove_artist_from_content(artist, content)
+	except:
+		return ''
+
+
 

@@ -38,7 +38,7 @@ PRODUCE_VOCAB = 	  {
 }
 NLP_PARAMS = 		  { 
 							'tokenizer': 		[ None ],
-							'ngram_range': 		[ (1, 2), (1, 3) ], 
+							'ngram_range': 		[ (1, 3) ], 
 							'min_df': 			[ 9 ]
 }
 NAMES = 			  { 
@@ -60,6 +60,7 @@ def main(scoring_func=metrics.roc_auc_score, file_path='data/final_p4k.csv',
 	result = {} 
 
 	df = pd.read_csv(file_path)
+	df['Content'] = df.apply(lambda x: nlpp.remove(x['Artist'], x['Content']), axis=1)
 	mid, neg, pos = nlpp.produce_sentiment_data(df)
 
 	# create labels
