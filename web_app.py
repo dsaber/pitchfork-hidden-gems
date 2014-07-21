@@ -9,6 +9,8 @@ from flask import request
 from flask import escape
 
 import urllib2
+import requests
+import json
 
 # data/database
 import psycopg2
@@ -87,7 +89,7 @@ def listen(artist_name, album_name):
 		listen_obj = {}
 		listen_obj['html'] = 'Sorry, streaming is not available for this album'
 	return (render_template('listen.html') + str(listen_obj['html']))
-	
+
 
 # predicting and scoring logic
 @app.route('/predict/', methods=[ 'GET', 'POST' ])
