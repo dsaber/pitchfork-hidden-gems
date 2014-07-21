@@ -6,5 +6,4 @@ Flask
 psycopg2
 sqlalchemy
 pandas
-statsmodels
 patsy
