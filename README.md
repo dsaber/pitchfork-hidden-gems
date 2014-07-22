@@ -1,6 +1,6 @@
 ### Pitchfork's Hidden Gems
 
-LIVE @ [p4k-hg.herokuapp.com](http://www.p4k-hg.herokuapp.com)
+LIVE @ [p4k-hg.herokuapp.com](www.p4k-hg.herokuapp.com)
 
 
 #### Description
