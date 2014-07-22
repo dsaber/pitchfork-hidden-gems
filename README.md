@@ -30,5 +30,6 @@ As mentioned, the model is trained only on 'Strongly Negative' and 'Strongly Pos
 Of course, validating recommendations is much more difficult, especially since we're primarily interested in using our model to recommend 'mid-range' albums. I've included some iPython markdown files that step through some of my additional validation steps. You may find these in [model/ipython_markdown/](./model/ipython_markdown).
 
 
-### Thanks for Reading! - Dan  
+##### Thanks for Reading! 
+###### - Dan  
 
