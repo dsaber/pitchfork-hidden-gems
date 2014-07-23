@@ -13,6 +13,9 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from nltk.tokenize import wordpunct_tokenize
 from nltk.stem import WordNetLemmatizer
 from nltk.tag import pos_tag
+from nltk.corpus import stopwords
+
+stop = stopwords.words('english')
 
 import re
 
@@ -114,6 +117,22 @@ def remove(artist, content):
 		return remove_artist_from_content(artist, content)
 	except:
 		return ''
+
+def find_significant_words(tfidf_vocab, logreg_coefs, feature_vector):
+	
+	ordered_feats = np.argsort(feature_vector)
+	ordered_feats = np.array(ordered_feats).ravel()
+
+	result = []
+
+	for i in ordered_feats[::-1]:
+		if logreg_coefs[i] > .5 and tfidf_vocab[i] not in stop:
+			result.append(tfidf_vocab[i])
+		if len(result) > 10:
+			break
+
+	return result
+
 
 
 
