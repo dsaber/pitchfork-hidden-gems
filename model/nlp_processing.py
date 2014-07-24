@@ -32,10 +32,7 @@ class LemmaTokenizer(object):
 class POSTokenizer(object):
     def __init__(self):
         self.pt = pos_tag
-        self.i  = 0 # keep track of iterations
     def __call__(self, doc):
-        print self.i
-        self.i += 1
         return [t[0] + t[1] for t in self.pt(wordpunct_tokenize(doc))]
 
 
@@ -118,18 +115,25 @@ def remove(artist, content):
     except:
         return ''
 
-def find_significant_words(tfidf_vocab, logreg_coefs, feature_vector):
+def find_significant_words(tfidf_vocab, logreg_coefs, feature_vector, best_or_worst='best'):
     
     ordered_feats = np.argsort(feature_vector)
     ordered_feats = np.array(ordered_feats).ravel()
 
     result = []
 
-    for i in ordered_feats[::-1]:
-        if logreg_coefs[i] > .5 and tfidf_vocab[i] not in stop:
-            result.append(tfidf_vocab[i])
-        if len(result) > 10:
-            break
+    if best_or_worst == 'best':
+        for i in ordered_feats[::-1]:
+            if logreg_coefs[i] > 5 and tfidf_vocab[i] not in stop:
+                result.append(tfidf_vocab[i])
+            if len(result) > 10:
+                break
+    else:
+        for i in ordered_feats:
+            if logreg_coefs[i] < -5 and tfidf_vocab[i] not in stop:
+                result.append(tfidf_vocab[i])
+            if len(result) > 10:
+                break
 
     return result
 
