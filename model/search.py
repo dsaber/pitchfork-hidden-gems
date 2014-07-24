@@ -82,34 +82,34 @@ def main(scoring_func=metrics.roc_auc_score, file_path='data/final_p4k.csv',
         print 'New Fold'
         
         # create training and test sets for this fold
-        neg_train_index     = n[0]
-        neg_test_index      = n[1]
+        neg_train_index = n[0]
+        neg_test_index = n[1]
 
-        neg_train           = pd.DataFrame(neg['Content'].values[neg_train_index], columns=['Content'])['Content']
-        neg_test            = pd.DataFrame(neg['Content'].values[neg_test_index], columns=['Content'])['Content']
-        neg_train_label     = neg_label.values[neg_train_index]
-        neg_test_label      = neg_label.values[neg_test_index]
+        neg_train = pd.DataFrame(neg['Content'].values[neg_train_index], columns=['Content'])['Content']
+        neg_test = pd.DataFrame(neg['Content'].values[neg_test_index], columns=['Content'])['Content']
+        neg_train_label = neg_label.values[neg_train_index]
+        neg_test_label = neg_label.values[neg_test_index]
 
-        pos_train_index     = p[0]
-        pos_test_index      = p[1]
+        pos_train_index = p[0]
+        pos_test_index = p[1]
 
-        pos_train           = pd.DataFrame(pos['Content'].values[pos_train_index], columns=['Content'])['Content']
-        pos_test            = pd.DataFrame(pos['Content'].values[pos_test_index], columns=['Content'])['Content']
-        pos_train_label     = pos_label.values[pos_train_index]
-        pos_test_label      = pos_label.values[pos_test_index]
+        pos_train = pd.DataFrame(pos['Content'].values[pos_train_index], columns=['Content'])['Content']
+        pos_test = pd.DataFrame(pos['Content'].values[pos_test_index], columns=['Content'])['Content']
+        pos_train_label = pos_label.values[pos_train_index]
+        pos_test_label = pos_label.values[pos_test_index]
 
         # consolidate all data for training/testing
-        train_content       = pd.concat([neg_train, pos_train])
-        train_label         = np.concatenate([neg_train_label, pos_train_label]).ravel() 
-        test_content        = pd.concat([neg_test, pos_test])
-        test_label          = np.concatenate([neg_test_label, pos_test_label]).ravel()
+        train_content = pd.concat([neg_train, pos_train])
+        train_label = np.concatenate([neg_train_label, pos_train_label]).ravel() 
+        test_content = pd.concat([neg_test, pos_test])
+        test_label = np.concatenate([neg_test_label, pos_test_label]).ravel()
 
 
         for vocab_option in vocab_options:
-            voc_opt = { k:v for k, v in zip(vocab_dict.keys(), vocab_option) }
+            voc_opt = {k:v for k, v in zip(vocab_dict.keys(), vocab_option)}
 
             for nlp_option in nlp_options: 
-                nlp_opt = { k:v for k, v in zip(nlp_dict.keys(), nlp_option) } 
+                nlp_opt = {k:v for k, v in zip(nlp_dict.keys(), nlp_option)} 
 
                 # Avoid some computationally expensive processes
                 if nlp_opt['ngram_range'] != (1, 1) and (voc_opt['info_thresh'] is not None or nlp_opt['min_df'] == 1):

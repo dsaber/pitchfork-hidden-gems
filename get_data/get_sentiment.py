@@ -18,8 +18,8 @@ import numpy as np
 # negative/positive sentiment
 def get_nltk_sentiment(review_content, api_url='https://japerk-text-processing.p.mashape.com/sentiment/', key=MASHAPE_KEY):
 
-    text = { 'text': review_content.strip() }
-    headers = { 'X-Mashape-Key': key } 
+    text = {'text': review_content.strip()}
+    headers = {'X-Mashape-Key': key} 
     r = requests.post(api_url, headers=headers, data=text) 
     try: 
         sentiment = r.json()

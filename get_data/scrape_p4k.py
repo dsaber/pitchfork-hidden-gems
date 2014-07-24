@@ -27,16 +27,15 @@ def scrape_pitchfork(url_root='http://pitchfork.com/reviews/albums/', begin_page
     '''
 
 
-    result = { 'Artist':        [],
-               'Album':         [],
-               'Reviewer':      [],
-               'Date':          [], 
-               'Link':          [],
-               'Artwork':       [],
-               'Content':       [],
-               'Score':         [],
-               'BNM':           [] 
-             }
+    result = {'Artist':        [],
+              'Album':         [],
+              'Reviewer':      [],
+              'Date':          [], 
+              'Link':          [],
+              'Artwork':       [],
+              'Content':       [],
+              'Score':         [],
+              'BNM':           []}
 
 
     for page in xrange(begin_page, end_page + 1):
