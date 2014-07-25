@@ -72,7 +72,7 @@ def similar(artist_name, page=0):
     underrated = underrated[begin:end]
 
     begin_page = str(int(page) - 1)
-    end_page   = str(int(page) + 1)
+    end_page = str(int(page) + 1)
 
     return render_template('choices.html', underrated=underrated, artist_name=artist_name, begin_page=begin_page, end_page=end_page, ulib=urllib2.quote, int=int)
 

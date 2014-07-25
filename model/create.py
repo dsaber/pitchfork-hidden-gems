@@ -53,8 +53,8 @@ if __name__ == '__main__':
 
     print 'scaling all sentiment analysis scores to 0-10 range...'
     df['NLTK_score'] = df['NLTK_pos'].apply(lambda x: scale_score(x, 0, 1))
-    df['TB_score']   = df['TB_pos'].apply(lambda x: scale_score(x, -1, 1))
-    df['MY_score']   = df['MY_pos'].apply(lambda x: scale_score(x, 0, 1))
+    df['TB_score'] = df['TB_pos'].apply(lambda x: scale_score(x, -1, 1))
+    df['MY_score'] = df['MY_pos'].apply(lambda x: scale_score(x, 0, 1))
 
     print 'reordering sentiment analysis scores to fit Pitchfork scoring distribution...'
     score = df[['Score']].sort('Score').values

@@ -117,23 +117,18 @@ def remove(artist, content):
 
 def find_significant_words(tfidf_vocab, logreg_coefs, feature_vector, best_or_worst='best'):
     
-    ordered_feats = np.argsort(feature_vector)
-    ordered_feats = np.array(ordered_feats).ravel()
-
     result = []
+    ordering = np.argsort((feature_vector * logreg_coefs))
 
     if best_or_worst == 'best':
-        for i in ordered_feats[::-1]:
-            if logreg_coefs[i] > 5 and tfidf_vocab[i] not in stop:
-                result.append(tfidf_vocab[i])
-            if len(result) > 10:
-                break
-    else:
-        for i in ordered_feats:
-            if logreg_coefs[i] < -5 and tfidf_vocab[i] not in stop:
-                result.append(tfidf_vocab[i])
-            if len(result) > 10:
-                break
+        ordering = ordering[::-1]
+
+    for i in ordering:
+        current_word = tfidf_vocab[i]
+        if current_word not in stop:
+            result.append(current_word)
+        if len(result) > 10:
+            break
 
     return result
 
